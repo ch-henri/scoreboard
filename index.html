@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <link rel="icon" href="/images/favicon/favicon.svg" type="image/svg+xml">
+    <link rel="icon" href="/images/favicon/192x192.png" sizes="192x192" type="image/png">
+    <link rel="icon" href="/images/favicon/48x48.png" sizes="48x48" type="image/png">
+
+    <link rel="stylesheet" href="resources/css/main.css">
+    <script type="module" src="resources/js/main.js"></script>
+    <title>test</title>
+  </head>
+  <body x-data="scoreboard" class="font-mono font-medium bg-white text-black tabular-nums">
+    <main class="h-screen">
+      <div class="h-full flex flex-col divide-y">
+        <div x-show="winner" :class="{'ml-auto' : winner === 'white'}" class="w-1/2 bg-yellow-400 text-center py-6">
+          <div class="text-5xl text-orange-700 uppercase">WINNER</div>
+        </div>
+        <div class="flex-1 flex divide-x">
+          <div :class="{'bg-yellow-100' : winner === 'black'}" class="w-1/2 flex flex-col px-8">
+            <div class="h-1/2 grid place-items-center">
+              <div class="text-5xl font-semibold uppercase text-center">Charles-Henri Deschenaux</div>
+            </div>
+            <div class="h-1/2 grid items-center grid-cols-3">
+              <div class="">
+                <button data-shido="black" @click="addShido(shidoItemsBlack)" class="w-full grid gap-y-6">
+                  <div class="shido-yellow order-3 w-1/2 h-7 rounded"></div>
+                  <div class="shido-yellow order-2 w-1/2 h-7 rounded"></div>
+                  <div class="shido-red order-1 w-1/2 h-7 rounded"></div>
+                </button>
+                <button @click="deleteShido(shidoItemsBlack)" class="invisible mt-3 text-sm uppercase font-semibold text-red-700" :class="{'!visible' : shidoCounter.black > 0}">Delete</button>
+              </div>
+              <div class="text-center">
+                <button @click="score($el)" data-ippon="black" class="font-score text-8xl font-bold">0</button>
+                <div class="text-xl uppercase">IPPON</div>
+              </div>
+              <div class="text-center">
+                <button @click="score($el)" data-wazaari="black" class="font-score text-8xl font-bold">0</button>
+                <div class="text-xl uppercase">WAZA-ARI</div>
+              </div>
+            </div>
+          </div>
+          <div :class="{'bg-yellow-100' : winner === 'white'}" class="w-1/2 flex flex-col text-blue-700 px-8">
+            <div class="h-1/2 grid place-items-center">
+              <div class="text-5xl font-semibold uppercase text-center">Charles-Henri Deschenaux</div>
+            </div>
+            <div class="h-1/2 grid items-center grid-cols-3">
+              <div class="text-center">
+                <button @click="score($el)" data-ippon="white" class="font-score text-8xl font-bold">0</button>
+                <div class="text-xl uppercase">IPPON</div>
+              </div>
+              <div class="text-center">
+                <button @click="score($el)" data-wazaari="white" class="font-score text-8xl font-bold">0</button>
+                <div class="text-xl uppercase">WAZA-ARI</div>
+              </div>  
+              <div class="">
+                <button data-shido="white" @click="addShido(shidoItemsWhite)" class="w-full grid gap-y-6">
+                  <div class="shido-yellow order-3 w-1/2 h-7 rounded"></div>
+                  <div class="shido-yellow order-2 w-1/2 h-7 rounded"></div>
+                  <div class="shido-red order-1 w-1/2 h-7 rounded"></div>
+                </button>
+                <button @click="deleteShido(shidoItemsWhite)" class="invisible mt-3 text-sm uppercase font-semibold text-red-700" :class="{'!visible' : shidoCounter.white > 0}">Delete</button>
+              </div>
+            </div>
+          </div>          
+        </div>
+        <div class="flex-1">
+          <div class="h-1/2 grid place-items-center">
+            <div :class="{'text-green-600': isRunning }" class="text-[150px]">
+              <span id="timer">04:00</span>
+            </div>
+          </div>
+          <div class="h-1/2 flex ">
+            <div class="w-1/3 grid place-items-center">
+              <div class="flex flex-col gap-y-4 items-center">
+                <div data-displayOsaekomi="black"  x-show="osaekomiActive.black" x-transition x-transition:leave.duration.2500ms  class="text-green-700 text-8xl">00</div>
+                <button @click="osaekomi($el)" data-osaekomi="black" x-show="!osaekomiActive.black" class="text-2xl font-semibold">OSAEKOMI</button>
+                <button @click="toketa($el)" data-toketa="black" x-show="osaekomiActive.black" class="text-2xl font-semibold">TOKETA</button>
+              </div>
+            </div>
+            <div class="w-1/3  flex flex-col items-center">
+              <button x-show="!isRunning && !isDone" @click="start" class="font-bold text-4xl">
+                <span class="sr-only">HAJIME</span>
+                <svg class="text-green-700" width="54" height="54" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <circle stroke="currentColor" cx="27" cy="27" r="24" stroke-width="5" />
+                  <path fill="currentColor" d="M35.593 24.06a3 3 0 010 4.88l-10.597 7.585c-1.985 1.422-4.746.003-4.746-2.439V18.914c0-2.442 2.761-3.86 4.746-2.44l10.597 7.587z" />
+                </svg>
+              </button>
+              <button x-show="isRunning" @click="stop" class="font-bold text-4xl">
+                <span class="sr-only">MATE</span>
+                <svg class="text-gray-400" width="54" height="54" fill="none" >
+                  <path fill="currentColor" d="M20 20h5v14h-5zM29 20h5v14h-5z" />
+                  <circle cx="27" cy="27" r="24" stroke="currentColor" stroke-width="5" />
+                </svg>
+              </button>
+              <button x-show="isDone || !isRunning" @click="reset" class="text-xl text-red-300 mt-8">RESTART</button>
+            </div>
+            <div class="w-1/3 grid place-items-center">
+              <div class="flex flex-col gap-y-4 items-center">
+                <div data-displayOsaekomi="white" x-show="osaekomiActive.white" x-transition x-transition:leave.duration.2500ms class="text-green-700 text-8xl">00</div>
+                <button @click="osaekomi($el)" data-osaekomi="white" x-show="!osaekomiActive.white" class="text-2xl font-semibold">OSAEKOMI</button>
+                <button @click="toketa($el)" data-toketa="white" x-show="osaekomiActive.white" class="text-2xl font-semibold">TOKETA</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      
+    </main>
+  </body>
+</html>

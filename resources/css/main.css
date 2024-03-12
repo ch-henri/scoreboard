@@ -1,0 +1,77 @@
+@font-face {
+  font-family: "monda";
+  src: url('/font/monda.woff2');
+  font-weight: 700;
+  font-display: swap;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "plexMono";
+  src: url('/font/IBMPlexMono-Medium-Latin1.woff2');
+  font-weight: 500;
+  font-display: swap;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "plexMono";
+  src: url('/font/IBMPlexMono-SemiBold-Latin1.woff2');
+  font-weight: 600;
+  font-display: swap;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "plexMono";
+  src: url('/font/IBMPlexMono-Bold-Latin1.woff2');
+  font-weight: 700;
+  font-display: swap;
+  font-style: normal;
+}
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+@layer components {
+
+  .h2 {
+    @apply text-3xl font-bold text-slate-800;
+  }
+
+  .h3 {
+    @apply text-xl font-bold text-slate-800;
+  }
+
+  .btn {
+    @apply px-3.5 py-2.5 text-center text-sm font-semibold;
+  }
+
+  .btn-primary {
+    @apply rounded-md bg-primary text-white shadow-sm hover:bg-primary focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary;
+  }
+
+  .form-input {
+    @apply block w-full rounded-md border-0 px-3.5 py-2 text-slate-900 shadow-sm ring-1 ring-inset ring-slate-300 placeholder:text-slate-400 focus:ring-2 focus:ring-inset focus:ring-primary sm:text-sm sm:leading-6;
+  }
+
+  .form-textarea {
+    @apply block w-full rounded-md border-0 px-3.5 py-2 text-slate-900 shadow-sm ring-1 ring-inset ring-slate-300 placeholder:text-slate-400 focus:ring-2 focus:ring-inset focus:ring-primary sm:text-sm sm:leading-6;
+  }
+
+
+  .shido-yellow,
+  .shido-red {
+    @apply bg-gray-100;
+  }
+
+  .shido-yellow.active {
+    @apply bg-yellow-500;
+  }
+
+  .shido-red.active {
+    @apply bg-red-500;
+  }
+}
