@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+
+    <title>test</title>
+  </head>
+  <body>
+    <h1>Interval</h1>
+    <div id="current" style="font-size:190px"></div>
+    <div id="display"></div>
+  </body>
+
+      <script>
+
+
+
+
+
+        // let i = 0;
+        // let display = document.querySelector('#display');
+        // let current = document.querySelector('#current');
+        // let start = Date.now();
+
+
+        // let interval = setInterval(() => {
+        //   i++;
+        //   i++ === 600 && (clearInterval(interval), display.textContent = (Date.now() - start)  / 1000);
+        //   (i % 10 === 0) && (current.textContent = i);
+        // }, 100)
+
+
+        let i = 0;
+        let display = document.querySelector('#display');
+        let current = document.querySelector('#current');
+        let start = Date.now();
+        let interval = 100; // ms
+        let duration = 50; // 5 sec
+        let expected = Date.now() + interval; // expected time the callback is called
+        
+        let timer = setTimeout(step, interval);
+
+        function step() {
+            let diff = Date.now() - expected; // the difference
+            if (diff > interval) {
+                // Maybe the browser (tab) was inactive?
+                // Pause the timer
+            } 
+            else {
+              i++;
+               if(i >= duration) { // time out
+                 clearTimeout(timer);
+                 display.textContent = (Date.now() - start)  / 1000; // time passed since the begining 
+                 (i % 10 === 0) && (current.textContent = i);
+               } 
+               else {
+                 (i % 10 === 0) && (current.textContent = i);
+                 expected += interval;
+                 timer = setTimeout(step, interval - diff); // take into account diff
+               }
+            }
+        }
+
+      </script>
+      
+    </main>
+  </body>
+</html>

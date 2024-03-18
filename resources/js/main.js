@@ -1,25 +1,27 @@
 import Alpine from 'alpinejs'
 import { data } from 'autoprefixer';
- 
+
 window.Alpine = Alpine;
 
 
 window.addEventListener('alpine:init', () => {
     Alpine.data('scoreboard', () => ({
         timer: document.querySelector('#timer'),
-        fightDuration: 3000,
-        tenths: null,
-        minutes:null,
+        fightDuration: 50, // 1/10 sec
+        timeLeft: null,
+        timerInterval: 100, // milliseconds
+        expectedTimerCb: null,
+        minutes: null,
         seconds: null,
         spareSeconds: null,
-        spareTenth: null,
+        timeOver: null,
+        goldenScore: false,
         countdown: null,
         osaekomiCountdown: null,
         isRunning: false,
-        isDone:false,
         shidoCounter: {
             black: 0,
-            white:0,
+            white: 0,
         },
         shidoItemsBlack: document.querySelector('[data-shido="black"]'),
         shidoItemsWhite: document.querySelector('[data-shido="white"]'),
@@ -31,40 +33,51 @@ window.addEventListener('alpine:init', () => {
         },
 
         init() {
-            this.tenths = this.fightDuration;
+            this.timeLeft = this.fightDuration;
             this.updateTimer();
         },
-        start() {
+
+        ajime() {
             this.isRunning = true;
-            this.countdown = setInterval(() => {
-                this.updateTimer();
-                this.tenths--;
-                if(this.tenths ===  0) {
-                    this.stop();
-                    this.isDone = true;
-                    this.gong.play();
-                }
-            }, 100)
+            this.expectedTimerCb = Date.now() + this.timerInterval;
+            this.countdown = setTimeout(() => this.step(), this.timerInterval);
         },
 
-        stop() {
+        step() {
+            let diff = Date.now() - this.expectedTimerCb; // the difference betwween each callback
+            if (diff > this.timerInterval) {
+                this.mate();
+            }
+            this.goldenScore ? this.timeLeft++ : this.timeLeft--;
+            if (this.timeLeft == 0) {
+                this.updateTimer();
+                this.mate();
+                this.gong.play();
+                this.goldenScore = true;
+            }
+            else {
+                this.timeLeft % 10 == 0 && this.updateTimer();
+                this.expectedTimerCb += this.timerInterval;
+                this.countdown = setTimeout(() => this.step(), this.timerInterval - diff);
+            }
+        },
+
+        mate() {
             clearInterval(this.countdown);
             this.isRunning = false;
         },
 
         updateTimer() {
-            this.minutes = Math.floor(this.tenths / 600);
-            this.spareTenths = this.tenths % 600;
-            this.seconds = Math.floor(this.spareTenths / 10);
-            this.spareTenths = this.spareTenths % 10;
+            this.minutes = Math.floor(this.timeLeft / 600);
+            this.seconds = (this.timeLeft % 600) / 10;
             this.timer.textContent = `${this.minutes}:${this.seconds < 10 ? '0' : ''}${this.seconds}`;
         },
 
         reset() {
-            this.tenths = this.fightDuration;
-            this.isDone = false;
+            this.timeLeft = this.fightDuration;
             this.updateTimer();
             this.revertVictory();
+            this.goldenScore = false;
         },
 
         // ----------------
@@ -75,7 +88,7 @@ window.addEventListener('alpine:init', () => {
             this.osaekomiActive[color] = true;
             // elm.style.display = 'none';
             // y'a t'il un wazaari ?
-            if(wazaari.textContent == 1) {
+            if (wazaari.textContent == 1) {
                 // lancer le timer pour 10sec
                 this.timerOsaekomi(color, 10)
             } else {
@@ -91,10 +104,10 @@ window.addEventListener('alpine:init', () => {
                 countUp++;
                 displayOsaekomi.textContent = countUp;
                 console.log(duration);
-                if(countUp == duration) {
+                if (countUp == duration) {
                     this.victory(color);
                     clearInterval(this.osaekomiCountdown);
-                } else if(countUp == 10) {
+                } else if (countUp == 10) {
                     this.score(document.querySelector(`[data-wazaari="${color}"]`))
                 }
             }, 1000)
@@ -112,18 +125,18 @@ window.addEventListener('alpine:init', () => {
 
 
         score(elm) {
-            if(elm.dataset.ippon) {
-                if(elm.textContent == 0) {
+            if (elm.dataset.ippon) {
+                if (elm.textContent == 0) {
                     this.victory(elm.dataset.ippon)
                 } else {
                     this.revertVictory(elm.dataset.ippon);
                 }
             }
-            if(elm.dataset.wazaari) {
-                if(elm.textContent == 0) {
+            if (elm.dataset.wazaari) {
+                if (elm.textContent == 0) {
                     elm.textContent = 1;
                 }
-                else if(elm.textContent == 1) {
+                else if (elm.textContent == 1) {
                     elm.textContent = 0;
                     this.victory(elm.dataset.wazaari);
                 }
@@ -136,7 +149,7 @@ window.addEventListener('alpine:init', () => {
             for (let i = 0; i <= counter; i++) {
                 elements.children[i].classList.add('active');
             }
-            if(counter === 2) {
+            if (counter === 2) {
                 this.victory(color);
             }
             counter <= 2 && this.shidoCounter[color]++;
@@ -147,7 +160,7 @@ window.addEventListener('alpine:init', () => {
             let counter = this.shidoCounter[color];
             let lastShido = null;
             for (const item of elements.children) {
-                if(item.matches('.active')) {
+                if (item.matches('.active')) {
                     lastShido = item;
                 }
             }
@@ -160,21 +173,18 @@ window.addEventListener('alpine:init', () => {
             let ippon = document.querySelector(`[data-ippon="${color}"]`);
             ippon.textContent = "1";
             // Stop le temps
-            this.stop();
-            this.isDone = true;
+            this.mate();
             // mettre le fond jaune
             this.winner = color;
-            // start alarm
+            // ajime alarm
             this.gong.play();
         },
         revertVictory() {
             //enlever le ippon
-            if(this.winner) {
+            if (this.winner) {
                 let ippon = document.querySelector(`[data-ippon="${this.winner}"]`);
                 ippon.textContent = "0";
             }
-            // changer le label du timer
-            this.isDone = false;
             // enlever le fond jaune
             this.winner = null;
             // stop alarm
@@ -185,5 +195,5 @@ window.addEventListener('alpine:init', () => {
 
 })
 
- 
+
 Alpine.start()

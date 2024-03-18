@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+
+  <title>test</title>
+</head>
+
+<body>
+  <h1>mon temps</h1>
+  <div id="display"></div>
+</body>
+
+<script>
+  let i = 0;
+  let display = document.querySelector('#display');
+  let start = Date.now();
+
+
+  let countdown = setTimeout(function tick() {
+    i++;
+    if (i === 600) {
+      clearInterval(countdown);
+      display.textContent = (Date.now() - start) / 1000;
+    }
+    else {
+      countdown = setTimeout(tick, 100);
+      display.textContent = i;
+    }
+  }, 100)
+
+
+
+
+</script>
+
+</main>
+</body>
+
+</html>
