@@ -23,19 +23,22 @@ window.addEventListener('alpine:init', () => {
             black: 0,
             white: 0,
         },
+        osaekomiColor: false,
+        osaekomiColor: document.querySelectorAll('[data-osaekomiColor]'),
         shidoItemsBlack: document.querySelector('[data-shido="black"]'),
         shidoItemsWhite: document.querySelector('[data-shido="white"]'),
         winner: null,
         gong: new Audio('/public/gong.mp3'),
-        osaekomiActive: {
-            white: false,
-            black: false,
-        },
+        osaekomiActive: false,
+
 
         init() {
             this.timeLeft = this.fightDuration;
             this.updateTimer();
+            this.$watch(this.test, value => console.log(value));
         },
+
+        test() { },
 
         ajime() {
             this.isRunning = true;
@@ -82,42 +85,37 @@ window.addEventListener('alpine:init', () => {
 
         // ----------------
 
-        osaekomi(elm) {
-            let color = elm.dataset.osaekomi;
-            let wazaari = document.querySelector(`[data-wazaari="${color}"]`);
-            this.osaekomiActive[color] = true;
-            // elm.style.display = 'none';
-            // y'a t'il un wazaari ?
-            if (wazaari.textContent == 1) {
-                // lancer le timer pour 10sec
-                this.timerOsaekomi(color, 10)
-            } else {
-                this.timerOsaekomi(color, 20)
-            }
+        osaekomi() {
+            this.osaekomiActive = true;
+            this.timerOsaekomi();
         },
 
-        timerOsaekomi(color, duration) {
+        timerOsaekomi() {
             let countUp = 0;
-            let displayOsaekomi = document.querySelector(`[data-displayOsaekomi="${color}"]`);
+            let displayOsaekomi = document.querySelector('#osaekomiTimer');
+            let hasWazaari;
             displayOsaekomi.textContent = 0;
             this.osaekomiCountdown = setInterval(() => {
                 countUp++;
                 displayOsaekomi.textContent = countUp;
-                console.log(duration);
-                if (countUp == duration) {
-                    this.victory(color);
+                if (['black', 'white'].includes(this.osaekomiColor)) {
+                    hasWazaari = document.querySelector(`[data-wazaari="${this.osaekomiColor}"]`).textContent;
+                    if (countUp == 10 && hasWazaari == 1) {
+                        this.victory(this.osaekomiColor);
+                        clearInterval(this.osaekomiCountdown);
+                    }
+                } else if (countUp == 20){
                     clearInterval(this.osaekomiCountdown);
-                } else if (countUp == 10) {
-                    this.score(document.querySelector(`[data-wazaari="${color}"]`))
+                    this.gong.play();
                 }
+
             }, 1000)
         },
 
-        toketa(elm) {
-            let color = elm.dataset.toketa;
+        toketa() {
             clearInterval(this.osaekomiCountdown);
-            console.log();
-            this.osaekomiActive[color] = false;
+            this.osaekomiActive = false;
+            document.querySelector(`[data-osaekomiColor="${this.osaekomiColor}"]`).checked = false;
         },
 
 
