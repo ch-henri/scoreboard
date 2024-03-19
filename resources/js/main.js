@@ -21,12 +21,13 @@ window.addEventListener('alpine:init', () => {
         isRunning: false,
         shidoCounter: {
             black: 0,
-            white: 0,
+            blue: 0,
+        },
+        wazaariCounter: {
+          black: 0,
+          blue: 0,  
         },
         osaekomiColor: false,
-        osaekomiColor: document.querySelectorAll('[data-osaekomiColor]'),
-        shidoItemsBlack: document.querySelector('[data-shido="black"]'),
-        shidoItemsWhite: document.querySelector('[data-shido="white"]'),
         winner: null,
         gong: new Audio('/public/gong.mp3'),
         osaekomiActive: false,
@@ -97,7 +98,7 @@ window.addEventListener('alpine:init', () => {
             this.osaekomiCountdown = setInterval(() => {
                 countUp++;
                 displayOsaekomi.textContent = `${countUp < 10 ? '0' : ''}${countUp}`;
-                if (['black', 'white'].includes(this.osaekomiColor)) {
+                if (this.osaekomiColor) {
                     hasWazaari = document.querySelector(`[data-wazaari="${this.osaekomiColor}"]`).textContent;
                     if (countUp == 10 && hasWazaari == 1) {
                         this.victory(this.osaekomiColor);
@@ -132,6 +133,7 @@ window.addEventListener('alpine:init', () => {
             if (elm.dataset.wazaari) {
                 if (elm.textContent == 0) {
                     elm.textContent = 1;
+                    this.wazaariCounter[elm.dataset.wazaari] = 1;
                 }
                 else if (elm.textContent == 1) {
                     elm.textContent = 0;
@@ -139,15 +141,18 @@ window.addEventListener('alpine:init', () => {
                 }
             }
         },
+
         addShido(elements) {
             let color = elements.dataset.shido;
             let counter = this.shidoCounter[color];
-            console.log(counter);
             for (let i = 0; i <= counter; i++) {
                 elements.children[i].classList.add('active');
             }
             if (counter === 2) {
-                this.victory(color);
+                let winnerColor;
+                color === 'black' ? winnerColor = 'blue' : winnerColor = 'black';
+                console.log(winnerColor);
+                this.victory(winnerColor);
             }
             counter <= 2 && this.shidoCounter[color]++;
         },

@@ -27,20 +27,32 @@
           </div>
           <div class="h-1/2 grid items-center grid-cols-3">
             <div class="">
-              <button data-shido="black" @click="addShido(shidoItemsBlack)" class="w-full grid gap-y-6">
-                <div class="shido-yellow order-3 w-1/2 h-7 rounded"></div>
-                <div class="shido-yellow order-2 w-1/2 h-7 rounded"></div>
-                <div class="shido-red order-1 w-1/2 h-7 rounded"></div>
+              <button data-shido="black" @click="addShido($el)" x-ref="shidoBlack" class="grid gap-y-6 w-1/2">
+                <div class="shido-yellow order-3 h-7 rounded"></div>
+                <div class="shido-yellow order-2 h-7 rounded"></div>
+                <div class="shido-red order-1 h-7 rounded"></div>
               </button>
-              <button @click="deleteShido(shidoItemsBlack)" class="invisible mt-3 text-sm uppercase font-semibold text-red-700" :class="{'!visible' : shidoCounter.black > 0}">Delete</button>
+              <button @click="deleteShido($refs.shidoBlack)" class="invisible mt-3 text-sm uppercase font-semibold text-gray-700 w-1/2" :class="{'!visible' : shidoCounter.black > 0}">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="mx-auto" viewBox="0 0 16 16">
+                  <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
+                  <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"/>
+                </svg>
+              </button>
             </div>
             <div class="text-center">
               <button @click="score($el)" data-ippon="black" class="font-score text-8xl font-bold">0</button>
               <div class="text-xl uppercase">IPPON</div>
             </div>
-            <div class="text-center">
-              <button @click="score($el)" data-wazaari="black" class="font-score text-8xl font-bold">0</button>
+            <div class="relative text-center">
+              <button @click="score($el)" data-wazaari="black" class="font-score text-8xl font-bold" x-text="wazaariCounter.black"></button>
               <div class="text-xl uppercase">WAZA-ARI</div>
+              <button x-show="wazaariCounter.black" @click="wazaariCounter.black = 0" class="absolute top-full left-1/2 -translate-x-1/2 text-gray-700 p-2 mt-1">
+                <span class="sr-only">delete waza-ari</span>
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="" viewBox="0 0 16 16">
+                  <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
+                  <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"/>
+                </svg>
+              </button>
             </div>
           </div>
         </div>
@@ -53,17 +65,29 @@
               <button @click="score($el)" data-ippon="blue" class="font-score text-8xl font-bold">0</button>
               <div class="text-xl uppercase">IPPON</div>
             </div>
-            <div class="text-center">
-              <button @click="score($el)" data-wazaari="blue" class="font-score text-8xl font-bold">0</button>
+            <div class="relative text-center">
+              <button @click="score($el)" data-wazaari="blue" class="font-score text-8xl font-bold" x-text="wazaariCounter.blue"></button>
               <div class="text-xl uppercase">WAZA-ARI</div>
+              <button x-show="wazaariCounter.blue" @click="wazaariCounter.blue = 0" class="absolute top-full left-1/2 -translate-x-1/2 text-gray-700 p-2 mt-1">
+                <span class="sr-only">delete waza-ari</span>
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="" viewBox="0 0 16 16">
+                  <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
+                  <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"/>
+                </svg>
+              </button>
             </div>
-            <div class="">
-              <button data-shido="blue" @click="addShido(shidoItemsBlue)" class="grid gap-y-6 w-1/2 ml-auto">
+            <div class="flex flex-col items-end">
+              <button data-shido="blue" @click="addShido($el)" x-ref="shidoBlue" class="grid gap-y-6 w-1/2">
                 <div class="shido-yellow order-3 h-7 rounded"></div>
                 <div class="shido-yellow order-2 h-7 rounded"></div>
                 <div class="shido-red order-1 h-7 rounded"></div>
               </button>
-              <button @click="deleteShido(shidoItemsBlue)" class="invisible mt-3 text-sm uppercase font-semibold text-red-700" :class="{'!visible' : shidoCounter.blue > 0}">Delete</button>
+              <button @click="deleteShido($refs.shidoBlue)" class="invisible w-1/2 mt-3 text-sm uppercase font-semibold text-gray-700 pb-3" :class="{'!visible' : shidoCounter.blue > 0}">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="mx-auto" viewBox="0 0 16 16">
+                  <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
+                  <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"/>
+                </svg>
+              </button>
             </div>
           </div>
         </div>
@@ -72,7 +96,7 @@
         <div class="h-full flex flex-col items-center justify-center pt-16">
           <button x-show="!osaekomiActive" @click="osaekomi($el)" class="top-50 left-0 text-2xl font-semibold">OSAEKOMI</button>
 
-          <div x-show="osaekomiActive" :class="{'animate-pulse' : ! ['black', 'blue'].includes(osaekomiColor)}" class="grid grid-cols-2">
+          <div x-show="osaekomiActive" :class="{'animate-pulse' : osaekomiColor}" class="grid grid-cols-2">
             <form action="" class="flex flex-col -mr-px">
               <label for="osaekomi-black" class="text-3xl text-gray-300 font-bold uppercase text-center border-2 border-gray-200 has-[:checked]:text-black has-[:checked]:border-black py-5">
                 <span>black</span>
