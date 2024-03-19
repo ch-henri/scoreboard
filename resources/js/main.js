@@ -94,10 +94,9 @@ window.addEventListener('alpine:init', () => {
             let countUp = 0;
             let displayOsaekomi = document.querySelector('#osaekomiTimer');
             let hasWazaari;
-            displayOsaekomi.textContent = 0;
             this.osaekomiCountdown = setInterval(() => {
                 countUp++;
-                displayOsaekomi.textContent = countUp;
+                displayOsaekomi.textContent = `${countUp < 10 ? '0' : ''}${countUp}`;
                 if (['black', 'white'].includes(this.osaekomiColor)) {
                     hasWazaari = document.querySelector(`[data-wazaari="${this.osaekomiColor}"]`).textContent;
                     if (countUp == 10 && hasWazaari == 1) {

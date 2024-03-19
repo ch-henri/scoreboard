@@ -14,16 +14,16 @@
   <title>test</title>
 </head>
 
-<body x-data="scoreboard" class="font-mono font-medium bg-white text-black tabular-nums">
+<body x-data="scoreboard" class="font-mono font-medium bg-blue text-black tabular-nums">
   <main class="h-screen">
     <div class="h-full flex flex-col divide-y">
-      <div x-show="winner" :class="{'ml-auto' : winner === 'white'}" class="w-1/2 bg-yellow-400 text-center py-6">
+      <div x-show="winner" :class="{'ml-auto' : winner === 'blue'}" class="w-1/2 bg-yellow-400 text-center py-6">
         <div class="text-5xl text-orange-700 uppercase">WINNER</div>
       </div>
       <div class="flex-1 flex divide-x">
         <div :class="{'bg-yellow-100' : winner === 'black'}" class="w-1/2 flex flex-col px-8">
           <div class="h-1/2 grid place-items-center">
-            <div class="text-5xl font-semibold uppercase text-center">Charles-Henri Deschenaux</div>
+            <div class="text-5xl font-semibold uppercase text-center" contenteditable="true" spellcheck=false>Charles-Henri Deschenaux</div>
           </div>
           <div class="h-1/2 grid items-center grid-cols-3">
             <div class="">
@@ -44,64 +44,57 @@
             </div>
           </div>
         </div>
-        <div :class="{'bg-yellow-100' : winner === 'white'}" class="w-1/2 flex flex-col text-blue-700 px-8">
+        <div :class="{'bg-yellow-100' : winner === 'blue'}" class="w-1/2 flex flex-col text-blue-700 px-8">
           <div class="h-1/2 grid place-items-center">
-            <div class="text-5xl font-semibold uppercase text-center">Charles-Henri Deschenaux</div>
+            <div class="text-5xl font-semibold uppercase text-center" contenteditable="true" spellcheck=false>Charles-Henri Deschenaux</div>
           </div>
           <div class="h-1/2 grid items-center grid-cols-3">
             <div class="text-center">
-              <button @click="score($el)" data-ippon="white" class="font-score text-8xl font-bold">0</button>
+              <button @click="score($el)" data-ippon="blue" class="font-score text-8xl font-bold">0</button>
               <div class="text-xl uppercase">IPPON</div>
             </div>
             <div class="text-center">
-              <button @click="score($el)" data-wazaari="white" class="font-score text-8xl font-bold">0</button>
+              <button @click="score($el)" data-wazaari="blue" class="font-score text-8xl font-bold">0</button>
               <div class="text-xl uppercase">WAZA-ARI</div>
             </div>
             <div class="">
-              <button data-shido="white" @click="addShido(shidoItemsWhite)" class="w-full grid gap-y-6">
-                <div class="shido-yellow order-3 w-1/2 h-7 rounded"></div>
-                <div class="shido-yellow order-2 w-1/2 h-7 rounded"></div>
-                <div class="shido-red order-1 w-1/2 h-7 rounded"></div>
+              <button data-shido="blue" @click="addShido(shidoItemsBlue)" class="grid gap-y-6 w-1/2 ml-auto">
+                <div class="shido-yellow order-3 h-7 rounded"></div>
+                <div class="shido-yellow order-2 h-7 rounded"></div>
+                <div class="shido-red order-1 h-7 rounded"></div>
               </button>
-              <button @click="deleteShido(shidoItemsWhite)" class="invisible mt-3 text-sm uppercase font-semibold text-red-700" :class="{'!visible' : shidoCounter.white > 0}">Delete</button>
+              <button @click="deleteShido(shidoItemsBlue)" class="invisible mt-3 text-sm uppercase font-semibold text-red-700" :class="{'!visible' : shidoCounter.blue > 0}">Delete</button>
             </div>
           </div>
         </div>
       </div>
-      <div class="flex-1">
-        <div class="h-1/2 grid place-items-center">
-          <button @click="isRunning ? mate : ajime" :class="{'text-green-600': isRunning }" class="text-[150px]">
-            <span id="timer">04:00</span>
-          </button>
-        </div>
-        <div class="h-1/2 flex ">
-          <div class="w-1/3 grid place-items-center">
-            <div class="flex flex-col gap-y-4 items-center">
-              <div id="osaekomiTimer" x-show="osaekomiActive" x-transition x-transition:leave.duration.2500ms class="text-green-700 text-8xl">00</div>
-              <button @click="osaekomi($el)" x-show="!osaekomiActive" class="text-2xl font-semibold">OSAEKOMI</button>
-              <button @click="toketa($el)" x-show="osaekomiActive" class="text-2xl font-semibold">TOKETA</button>
-              <form action="">
-                <div>
-                  <input type="radio" id="osaekomi-black" name="color" value="black" x-model="osaekomiColor" data-osaekomiColor="black" autocomplete="off" />
-                  <label for="osaekomi-black">black</label>
-                </div>
-                <div>
-                  <input type="radio" id="osaekomi-white" name="color" value="white" x-model="osaekomiColor" data-osaekomiColor="white" autocomplete="off" />
-                  <label for="osaekomi-white">white</label>
-                </div>
-              </form>
+      <div :class="{'showOsaekomi' : osaekomiActive}" class="flex-1 grid hideOsaekomi px-8">
+        <div class="h-full flex flex-col items-center justify-center pt-16">
+          <button x-show="!osaekomiActive" @click="osaekomi($el)" class="top-50 left-0 text-2xl font-semibold">OSAEKOMI</button>
+
+          <div x-show="osaekomiActive" :class="{'animate-pulse' : ! ['black', 'blue'].includes(osaekomiColor)}" class="grid grid-cols-2">
+            <form action="" class="flex flex-col -mr-px">
+              <label for="osaekomi-black" class="text-3xl text-gray-300 font-bold uppercase text-center border-2 border-gray-200 has-[:checked]:text-black has-[:checked]:border-black py-5">
+                <span>black</span>
+                <input type="radio" id="osaekomi-black" class="hidden" name="color" value="black" x-model="osaekomiColor" data-osaekomiColor="black" autocomplete="off" />
+              </label>
+              <label for="osaekomi-blue" class="text-3xl text-blue-200 font-bold uppercase text-center border-2 border-gray-200 has-[:checked]:text-blue-700 has-[:checked]:border-blue-700 py-5">
+                <span>blue</span>
+                <input type="radio" id="osaekomi-blue" class="hidden" name="color" value="blue" x-model="osaekomiColor" data-osaekomiColor="blue" autocomplete="off" />
+              </label>
+            </form>
+            <div :class="{ '!border-black !text-black' : osaekomiColor === 'black', '!border-blue-700 !text-blue-700' : osaekomiColor === 'blue'}" class="grid place-items-center h-full text-red-500 border-2 border-gray-200 px-5">
+              <div id="osaekomiTimer" class="text-8xl leading-none">00</div>
             </div>
           </div>
-          <div class="w-1/3  flex flex-col items-center">
-            <button x-show="!isRunning && (fightDuration != timeLeft)" @click="reset" class="text-xl text-red-300 mt-8">Reset</button>
-          </div>
-          <div class="w-1/3 grid place-items-center">
-            <!-- <div class="flex flex-col gap-y-4 items-center">
-                <div data-displayOsaekomi="white" x-show="osaekomiActive.white" x-transition x-transition:leave.duration.2500ms class="text-green-700 text-8xl">00</div>
-                <button @click="osaekomi($el)" data-osaekomi="white" x-show="!osaekomiActive.white" class="text-2xl font-semibold">OSAEKOMI</button>
-                <button @click="toketa($el)" data-toketa="white" x-show="osaekomiActive.white" class="text-2xl font-semibold">TOKETA</button>
-              </div> -->
-          </div>
+
+          <button x-show="osaekomiActive" @click="toketa($el)" class="text-2xl font-semibold mt-8">TOKETA</button>
+        </div>
+        <div class="grid place-items-center" x-transition>
+          <button @click="isRunning ? mate : ajime" :class="{'text-green-600': isRunning }" class="text-[190px]">
+            <span id="timer">04:00</span>
+          </button>
+          <button x-show="!isRunning && (fightDuration != timeLeft)" @click="reset" class="text-xl text-red-300">Reset</button>
         </div>
       </div>
     </div>
