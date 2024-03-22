@@ -14,32 +14,29 @@ window.addEventListener('alpine:init', () => {
         minutes: null,
         seconds: null,
         spareSeconds: null,
-        timeOver: null,
-        goldenScore: false,
         countdown: null,
-        osaekomiCountdown: null,
         isRunning: false,
+        goldenScore: false,
         shidoCounter: {
             black: 0,
             blue: 0,
         },
-        wazaariCounter: {
+        wazaari: {
           black: 0,
           blue: 0,  
         },
+        osaekomiCountdown: null,
+        osaekomiActive: false,
+        osaekomiIsPaused: false,
         osaekomiColor: false,
         winner: null,
         gong: new Audio('/public/gong.mp3'),
-        osaekomiActive: false,
 
 
         init() {
             this.timeLeft = this.fightDuration;
             this.updateTimer();
-            this.$watch(this.test, value => console.log(value));
         },
-
-        test() { },
 
         ajime() {
             this.isRunning = true;
@@ -57,7 +54,6 @@ window.addEventListener('alpine:init', () => {
                 this.updateTimer();
                 this.mate();
                 this.gong.play();
-                this.goldenScore = true;
             }
             else {
                 this.timeLeft % 10 == 0 && this.updateTimer();
@@ -69,6 +65,7 @@ window.addEventListener('alpine:init', () => {
         mate() {
             clearInterval(this.countdown);
             this.isRunning = false;
+            if(this.timeLeft !== 0) this.osaekomiIsPaused = true;
         },
 
         updateTimer() {
@@ -88,34 +85,39 @@ window.addEventListener('alpine:init', () => {
 
         osaekomi() {
             this.osaekomiActive = true;
+            this.osaekomiIsRunning = true;
             this.timerOsaekomi();
         },
 
         timerOsaekomi() {
             let countUp = 0;
             let displayOsaekomi = document.querySelector('#osaekomiTimer');
-            let hasWazaari;
             this.osaekomiCountdown = setInterval(() => {
-                countUp++;
-                displayOsaekomi.textContent = `${countUp < 10 ? '0' : ''}${countUp}`;
-                if (this.osaekomiColor) {
-                    hasWazaari = document.querySelector(`[data-wazaari="${this.osaekomiColor}"]`).textContent;
-                    if (countUp == 10 && hasWazaari == 1) {
-                        this.victory(this.osaekomiColor);
+                if (!this.osaekomiIsPaused) {
+                    countUp++;
+                    displayOsaekomi.textContent = `${countUp < 10 ? '0' : ''}${countUp}`;
+                    if (this.wazaari[this.osaekomiColor] == 1) {
+                        if (countUp == 10) {
+                            this.score(document.querySelector(`[data-wazaari="${this.osaekomiColor}"]`));
+                            clearInterval(this.osaekomiCountdown);
+                        }
+                    } else if (countUp == 20){
                         clearInterval(this.osaekomiCountdown);
+                        this.gong.play();
                     }
-                } else if (countUp == 20){
-                    clearInterval(this.osaekomiCountdown);
-                    this.gong.play();
                 }
-
             }, 1000)
         },
 
         toketa() {
             clearInterval(this.osaekomiCountdown);
+            document.querySelector('#osaekomiTimer').textContent = '00';
             this.osaekomiActive = false;
-            document.querySelector(`[data-osaekomiColor="${this.osaekomiColor}"]`).checked = false;
+            this.osaekomiIsPaused = false;
+            if (this.osaekomiColor) {
+                document.querySelector(`[data-osaekomiColor="${this.osaekomiColor}"]`).checked = false;
+                this.osaekomiColor = false;
+            } 
         },
 
 
@@ -132,12 +134,11 @@ window.addEventListener('alpine:init', () => {
             }
             if (elm.dataset.wazaari) {
                 if (elm.textContent == 0) {
-                    elm.textContent = 1;
-                    this.wazaariCounter[elm.dataset.wazaari] = 1;
+                    this.wazaari[elm.dataset.wazaari] = 1;
                 }
                 else if (elm.textContent == 1) {
-                    elm.textContent = 0;
                     this.victory(elm.dataset.wazaari);
+                    this.wazaari[elm.dataset.wazaari] = 0;
                 }
             }
         },
@@ -170,6 +171,7 @@ window.addEventListener('alpine:init', () => {
             this.shidoCounter[color]--;
             this.revertVictory()
         },
+
         victory(color) {
             // Mettre 1 ippon
             let ippon = document.querySelector(`[data-ippon="${color}"]`);
@@ -181,6 +183,7 @@ window.addEventListener('alpine:init', () => {
             // ajime alarm
             this.gong.play();
         },
+
         revertVictory() {
             //enlever le ippon
             if (this.winner) {
