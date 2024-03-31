@@ -1,5 +1,6 @@
 import Alpine from 'alpinejs'
-import { data } from 'autoprefixer';
+
+
 
 window.Alpine = Alpine;
 
@@ -86,6 +87,7 @@ window.addEventListener('alpine:init', () => {
         osaekomi() {
             this.osaekomiActive = true;
             this.osaekomiIsRunning = true;
+            clearInterval(this.osaekomiCountdown);
             this.timerOsaekomi();
         },
 
@@ -97,12 +99,13 @@ window.addEventListener('alpine:init', () => {
                     countUp++;
                     displayOsaekomi.textContent = `${countUp < 10 ? '0' : ''}${countUp}`;
                     if (this.wazaari[this.osaekomiColor] == 1) {
-                        if (countUp == 10) {
-                            this.score(document.querySelector(`[data-wazaari="${this.osaekomiColor}"]`));
-                            clearInterval(this.osaekomiCountdown);
+                        if (countUp >= 10) {
+                            this.scoreWazaari(document.querySelector(`[data-wazaari="${this.osaekomiColor}"]`));
+                            this.osaekomiIsPaused = true;
                         }
                     } else if (countUp == 20){
                         clearInterval(this.osaekomiCountdown);
+                        this.victory(this.osaekomiColor)
                         this.gong.play();
                     }
                 }
@@ -123,24 +126,24 @@ window.addEventListener('alpine:init', () => {
 
         // -----------------
 
+        scoreWazaari(elm) {
+            let color = elm.dataset.wazaari;
+            // si 0 ou 1 wazaari -> wazaari++
+            if ([0,1].includes(this.wazaari[color])) this.wazaari[color]++;
+            // si 1 wazaari -> victory
+            if (this.wazaari[color] == 2) this.victory(color);
+        },
 
-        score(elm) {
-            if (elm.dataset.ippon) {
-                if (elm.textContent == 0) {
-                    this.victory(elm.dataset.ippon)
-                } else {
-                    this.revertVictory(elm.dataset.ippon);
-                }
+        scoreIppon(elm) {
+            let color = elm.dataset.ippon;
+            // si 0 ippon -> victoire
+            if (elm.textContent == 0) {
+                this.victory(color);
+            } else {
+                this.revertVictory(color);
             }
-            if (elm.dataset.wazaari) {
-                if (elm.textContent == 0) {
-                    this.wazaari[elm.dataset.wazaari] = 1;
-                }
-                else if (elm.textContent == 1) {
-                    this.victory(elm.dataset.wazaari);
-                    this.wazaari[elm.dataset.wazaari] = 0;
-                }
-            }
+            // si 2 wazaari -> wazaari--
+            if (this.wazaari[color] == 2) this.wazaari[color]--;
         },
 
         addShido(elements) {
@@ -195,6 +198,20 @@ window.addEventListener('alpine:init', () => {
             // stop alarm
             this.gong.pause();
             this.gong.currentTime = 0;
+        },
+
+        // ---------------------
+
+        paramUpdate(event) {
+            dialog.close();
+            let seconds = parseInt(document.querySelector('#seconds').value, 10);
+            let minutes = parseInt(document.querySelector('#minutes').value, 10);
+            if(minutes && seconds) {
+                let newTime = ((minutes * 60) + seconds) * 10;
+                console.log(newTime);
+                this.fightDuration =  newTime;
+                this.init();
+            }
         }
     }))
 

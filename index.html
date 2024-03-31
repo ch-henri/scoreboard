@@ -11,17 +11,21 @@
 
   <link rel="stylesheet" href="resources/css/main.css">
   <script type="module" src="resources/js/main.js"></script>
+  <script type="module" src="resources/js/modal.js"></script>
   <title>test</title>
 </head>
+
 
 <body x-data="scoreboard" class="font-mono font-medium bg-blue text-black tabular-nums">
   <main class="h-screen">
     <div class="h-full flex flex-col divide-y" :class="{'border-[20px] border-yellow-200' : goldenScore}">
-      <div x-cloack x-show="goldenScore" class="grid place-items-center text-[48px] text-yellow-900 bg-yellow-200 px-6 py-2 font-bold">GOLDEN SCORE</div>
-      <div x-show="winner" :class="{'ml-auto' : winner === 'blue'}" class="w-1/2 bg-yellow-400 text-center py-6">
+      <div style="display:none" x-show="goldenScore" class="grid place-items-center text-[48px] text-yellow-900 bg-yellow-200 px-6 py-2 font-bold">GOLDEN SCORE</div>
+      <div style="display:none" x-show="winner" :class="{'ml-auto' : winner === 'blue'}" class="w-1/2 bg-yellow-400 text-center py-6">
         <div class="text-5xl text-orange-700 uppercase">WINNER</div>
       </div>
       <div class="flex-1 flex divide-x">
+
+        <!-- Opponent 1 -->
         <div :class="{'bg-yellow-100' : winner === 'black'}" class="w-1/2 flex flex-col px-8">
           <div class="h-1/2 grid place-items-center">
             <div class="text-5xl font-semibold uppercase text-center" contenteditable="true" spellcheck=false>Charles-Henri Deschenaux</div>
@@ -42,13 +46,13 @@
               </button>
             </div>
             <div class="text-center">
-              <button @click="score($el)" data-ippon="black" class="font-score text-8xl font-bold">0</button>
+              <button @click="scoreIppon($el)" data-ippon="black" class="font-score text-8xl font-bold">0</button>
               <div class="text-xl uppercase">IPPON</div>
             </div>
             <div class="relative text-center">
-              <button @click="score($el)" data-wazaari="black" class="font-score text-8xl font-bold" x-text="wazaari.black"></button>
+              <button @click="scoreWazaari($el)" data-wazaari="black" class="font-score text-8xl font-bold" x-text="wazaari.black != 1 ? '0' : '1' "></button>
               <div class="text-xl uppercase">WAZA-ARI</div>
-              <button x-show="wazaari.black" @click="wazaari.black = 0" class="absolute top-full left-1/2 -translate-x-1/2 text-gray-700 p-2 mt-1">
+              <button x-show="wazaari.black == 1" @click="wazaari.black = 0" class="absolute top-full left-1/2 -translate-x-1/2 text-gray-700 p-2 mt-1">
                 <span class="sr-only">Delete waza-ari</span>
                 <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="" viewBox="0 0 16 16">
                   <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16" />
@@ -58,19 +62,21 @@
             </div>
           </div>
         </div>
+
+        <!-- Opponent 2 -->
         <div :class="{'bg-yellow-100' : winner === 'blue'}" class="w-1/2 flex flex-col text-blue-700 px-8">
           <div class="h-1/2 grid place-items-center">
             <div class="text-5xl font-semibold uppercase text-center" contenteditable="true" spellcheck=false>Charles-Henri Deschenaux</div>
           </div>
           <div class="h-1/2 grid items-center grid-cols-3">
             <div class="text-center">
-              <button @click="score($el)" data-ippon="blue" class="font-score text-8xl font-bold">0</button>
+              <button @click="scoreIppon($el)" data-ippon="blue" class="font-score text-8xl font-bold">0</button>
               <div class="text-xl uppercase">IPPON</div>
             </div>
             <div class="relative text-center">
-              <button @click="score($el)" data-wazaari="blue" class="font-score text-8xl font-bold" x-text="wazaari.blue"></button>
+              <button @click="scoreWazaari($el)" data-wazaari="blue" class="font-score text-8xl font-bold" x-text="wazaari.blue != 1 ? '0' : '1' "></button>
               <div class="text-xl uppercase">WAZA-ARI</div>
-              <button x-show="wazaari.blue" @click="wazaari.blue = 0" class="absolute top-full left-1/2 -translate-x-1/2 text-gray-700 p-2 mt-1">
+              <button x-show="wazaari.blue == 1" @click="wazaari.blue = 0" class="absolute top-full left-1/2 -translate-x-1/2 text-gray-700 p-2 mt-1">
                 <span class="sr-only">Delete waza-ari</span>
                 <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="" viewBox="0 0 16 16">
                   <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16" />
@@ -95,17 +101,17 @@
           </div>
         </div>
       </div>
+
+      <!-- Osaekomi timer -->
       <div :class="{'showOsaekomi' : osaekomiActive}" class="flex-1 grid hideOsaekomi px-8">
-       
-        <!-- Osaekomi timer -->
         <div class="h-full flex flex-col items-center justify-center pt-16">
-          <div x-show="osaekomiActive" :class="{'animate-pulse' : !osaekomiColor}" class="grid grid-cols-2">
+          <div style="display:none" x-show="osaekomiActive" class="grid grid-cols-2">
             <form action="" class="flex flex-col -mr-px">
-              <label for="osaekomi-black" class="text-3xl text-gray-300 font-bold uppercase text-center border-2 border-gray-200 cursor-pointer has-[:checked]:text-black has-[:checked]:border-black py-5">
+              <label for="osaekomi-black" :class="{'animate-pulse' : !osaekomiColor}" class="text-3xl text-gray-300 font-bold uppercase text-center border-2 border-gray-200 cursor-pointer has-[:checked]:text-black has-[:checked]:border-black py-5">
                 <span>black</span>
                 <input type="radio" id="osaekomi-black" class="hidden" name="color" value="black" x-model="osaekomiColor" data-osaekomiColor="black" autocomplete="off" />
               </label>
-              <label for="osaekomi-blue" class="text-3xl text-blue-200 font-bold uppercase text-center border-2 border-gray-200 cursor-pointer has-[:checked]:text-blue-700 has-[:checked]:border-blue-700 py-5">
+              <label for="osaekomi-blue" :class="{'animate-pulse' : !osaekomiColor}" class="text-3xl text-blue-200 font-bold uppercase text-center border-2 border-gray-200 cursor-pointer has-[:checked]:text-blue-700 has-[:checked]:border-blue-700 py-5">
                 <span>blue</span>
                 <input type="radio" id="osaekomi-blue" class="hidden" name="color" value="blue" x-model="osaekomiColor" data-osaekomiColor="blue" autocomplete="off" />
               </label>
@@ -113,9 +119,9 @@
             <button @click="osaekomiIsPaused = !osaekomiIsPaused" :class="{ '!border-black !text-black' : osaekomiColor === 'black', '!border-blue-700 !text-blue-700' : osaekomiColor === 'blue'}" class="relative grid place-items-center h-full border-2 border-gray-200 px-5">
               <div :class="{'opacity-25' : osaekomiIsPaused}" id="osaekomiTimer" class="text-8xl leading-none">00</div>
               <div class="absolute inset-0 grid place-items-center">
-                <svg x-show="osaekomiIsPaused" width="48" height="48"  viewBox="0 0 16 16" fill="currentColor" >
+                <svg x-show="osaekomiIsPaused" width="48" height="48" viewBox="0 0 16 16" fill="currentColor">
                   <path d="M16 8A8 8 0 110 8a8 8 0 0116 0M6.25 5C5.56 5 5 5.56 5 6.25v3.5a1.25 1.25 0 102.5 0v-3.5C7.5 5.56 6.94 5 6.25 5m3.5 0c-.69 0-1.25.56-1.25 1.25v3.5a1.25 1.25 0 102.5 0v-3.5C11 5.56 10.44 5 9.75 5" />
-              </svg>
+                </svg>
               </div>
             </button>
           </div>
@@ -130,14 +136,45 @@
             </button>
           </div>
           <div class="grid mb-8">
-            <button  @click="reset" :class="{'!visible' : !isRunning && (fightDuration != timeLeft)}" class="invisible text-xl text-red-300">RESET</button>
+            <button @click="reset" :class="{'!visible' : !isRunning && (fightDuration != timeLeft)}" class="invisible text-xl text-red-300">RESET</button>
             <button :class="{'!visible' : !osaekomiActive && (timeLeft !== 0)}" @click="osaekomi($el)" class="invisible top-50 left-0 text-2xl font-semibold text-gray-400">OSAEKOMI</button>
             <button :class="{'!block' : timeLeft === 0 && !goldenScore}" @click="goldenScore = true" class="hidden top-50 left-0 text-2xl font-semibold text-yellow-600">GOLDEN SCORE</button>
           </div>
         </div>
-
       </div>
+
+      <!-- Modal -->
+      <button x-show="fightDuration === timeLeft" type="button" id="triggerDialog" class="absolute right-0 bottom-0 border-0 bg-gray-50 rounded-full text-gray-500 hover:bg-gray-100 m-6 p-2">
+        <span class="sr-only">Open modal</span>
+        <svg width="20" height="20" fill="currentColor" class="bi bi-gear-fill" viewBox="0 0 16 16">
+          <path d="M9.405 1.05c-.413-1.4-2.397-1.4-2.81 0l-.1.34a1.464 1.464 0 0 1-2.105.872l-.31-.17c-1.283-.698-2.686.705-1.987 1.987l.169.311c.446.82.023 1.841-.872 2.105l-.34.1c-1.4.413-1.4 2.397 0 2.81l.34.1a1.464 1.464 0 0 1 .872 2.105l-.17.31c-.698 1.283.705 2.686 1.987 1.987l.311-.169a1.464 1.464 0 0 1 2.105.872l.1.34c.413 1.4 2.397 1.4 2.81 0l.1-.34a1.464 1.464 0 0 1 2.105-.872l.31.17c1.283.698 2.686-.705 1.987-1.987l-.169-.311a1.464 1.464 0 0 1 .872-2.105l.34-.1c1.4-.413 1.4-2.397 0-2.81l-.34-.1a1.464 1.464 0 0 1-.872-2.105l.17-.31c.698-1.283-.705-2.686-1.987-1.987l-.311.169a1.464 1.464 0 0 1-2.105-.872zM8 10.93a2.929 2.929 0 1 1 0-5.86 2.929 2.929 0 0 1 0 5.858z" />
+        </svg>
+      </button>
+      <dialog id="dialog" @submit.prevent="paramUpdate" class="w-full max-w-xl p-0">
+        <div id="dialogInner" class="p-8 mx-3">
+          <button type="button" class="block absolute top-0 right-0 text-gray-400 hover:text-gray-800 m-3 p-1" id="closeDialogBtn">
+            <span class="sr-only"></span>
+            <svg width="30" height="30" fill="currentColor" class="bi bi-x-circle-fill" viewBox="0 0 16 16">
+              <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0M5.354 4.646a.5.5 0 1 0-.708.708L7.293 8l-2.647 2.646a.5.5 0 0 0 .708.708L8 8.707l2.646 2.647a.5.5 0 0 0 .708-.708L8.707 8l2.647-2.646a.5.5 0 0 0-.708-.708L8 7.293z" />
+            </svg>
+          </button>
+          <h1 class="text-2xl text-center uppercase mb-12 mt-4">Fight duration</h1>
+          <form action="">
+            <div class="flex justify-center items-center mb-8">
+              <label for="duration" class="mr-4 sr-only">Minutes</label>
+              <input type="number" name="minutes" id="minutes" class="block text-center text-2xl" style="width: 4.5em;" autocomplete="off">
+              <span>:</span>
+              <label for="duration" class="sr-only">Minutes</label>
+              <input type="number" name="seconds" step="10" id="seconds" class="block text-2xl" style="width: 4.5em;" autocomplete="off">
+            </div>
+            <div class="flex items-center gap-x-4 mb-8">
+            </div>
+            <button type="submit" class="block w-full text-white bg-black py-2 px-4">Enregister</button>
+          </form>
+        </div>
+      </dialog>
     </div>
   </main>
 </body>
+
 </html>
