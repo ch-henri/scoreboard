@@ -7,7 +7,7 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        mono: ['plexMono', ...defaultTheme.fontFamily.mono],
+        sans: ['roboto', ...defaultTheme.fontFamily.sans],
         score: ['monda', ...defaultTheme.fontFamily.mono],
       },
       colors: {

@@ -31,7 +31,7 @@ window.addEventListener('alpine:init', () => {
         osaekomiIsPaused: false,
         osaekomiColor: false,
         winner: null,
-        gong: new Audio('/public/gong.mp3'),
+        gong: new Audio('/gong.mp3'),
 
 
         init() {
@@ -43,6 +43,7 @@ window.addEventListener('alpine:init', () => {
             this.isRunning = true;
             this.expectedTimerCb = Date.now() + this.timerInterval;
             this.countdown = setTimeout(() => this.step(), this.timerInterval);
+            this.osaekomiIsPaused = false;
         },
 
         step() {
@@ -54,7 +55,7 @@ window.addEventListener('alpine:init', () => {
             if (this.timeLeft == 0) {
                 this.updateTimer();
                 this.mate();
-                this.gong.play();
+                this.osaekomiActive || this.gong.play(); 
             }
             else {
                 this.timeLeft % 10 == 0 && this.updateTimer();
@@ -86,7 +87,7 @@ window.addEventListener('alpine:init', () => {
 
         osaekomi() {
             this.osaekomiActive = true;
-            this.osaekomiIsRunning = true;
+            this.osaekomiIsPaused = !this.isRunning;
             clearInterval(this.osaekomiCountdown);
             this.timerOsaekomi();
         },
@@ -98,15 +99,8 @@ window.addEventListener('alpine:init', () => {
                 if (!this.osaekomiIsPaused) {
                     countUp++;
                     displayOsaekomi.textContent = `${countUp < 10 ? '0' : ''}${countUp}`;
-                    if (this.wazaari[this.osaekomiColor] == 1) {
-                        if (countUp >= 10) {
-                            this.scoreWazaari(document.querySelector(`[data-wazaari="${this.osaekomiColor}"]`));
-                            this.osaekomiIsPaused = true;
-                        }
-                    } else if (countUp == 20){
-                        clearInterval(this.osaekomiCountdown);
-                        this.victory(this.osaekomiColor)
-                        this.gong.play();
+                    if (countUp == 10 || countUp == 20) {
+                        this.scoreWazaari(document.querySelector(`[data-wazaari="${this.osaekomiColor}"]`));
                     }
                 }
             }, 1000)
@@ -176,26 +170,20 @@ window.addEventListener('alpine:init', () => {
         },
 
         victory(color) {
-            // Mettre 1 ippon
             let ippon = document.querySelector(`[data-ippon="${color}"]`);
             ippon.textContent = "1";
-            // Stop le temps
             this.mate();
-            // mettre le fond jaune
             this.winner = color;
-            // ajime alarm
+            this.osaekomiIsPaused = true;
             this.gong.play();
         },
 
         revertVictory() {
-            //enlever le ippon
             if (this.winner) {
                 let ippon = document.querySelector(`[data-ippon="${this.winner}"]`);
                 ippon.textContent = "0";
             }
-            // enlever le fond jaune
             this.winner = null;
-            // stop alarm
             this.gong.pause();
             this.gong.currentTime = 0;
         },
@@ -206,7 +194,9 @@ window.addEventListener('alpine:init', () => {
             dialog.close();
             let seconds = parseInt(document.querySelector('#seconds').value, 10);
             let minutes = parseInt(document.querySelector('#minutes').value, 10);
-            if(minutes && seconds) {
+            console.log(minutes);
+            console.log(!!seconds);
+            if(minutes >= 0 && seconds >= 0) {
                 let newTime = ((minutes * 60) + seconds) * 10;
                 console.log(newTime);
                 this.fightDuration =  newTime;
