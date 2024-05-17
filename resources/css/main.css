@@ -65,7 +65,7 @@
 
 .shido-yellow,
 .shido-red {
-  @apply bg-gray-100;
+  @apply bg-gray-300;
 }
 
 .shido-yellow.active {
