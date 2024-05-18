@@ -142,30 +142,30 @@ window.addEventListener('alpine:init', () => {
 
         addShido(elements) {
             let color = elements.dataset.shido;
-            let counter = this.shidoCounter[color];
-            for (let i = 0; i <= counter; i++) {
-                elements.children[i].classList.add('active');
-            }
-            if (counter === 2) {
+            this.shidoCounter[color]++;
+            let counter = this.shidoCounter[color];            
+            elements.firstElementChild.textContent = counter;
+            if (counter === 3) {
+                elements.classList.remove('bg-yellow-500');
+                elements.classList.add('bg-red-500');
                 let winnerColor;
                 color === 'black' ? winnerColor = 'blue' : winnerColor = 'black';
-                console.log(winnerColor);
                 this.victory(winnerColor);
             }
-            counter <= 2 && this.shidoCounter[color]++;
         },
 
         deleteShido(elements) {
             let color = elements.dataset.shido;
-            let counter = this.shidoCounter[color];
-            let lastShido = null;
-            for (const item of elements.children) {
-                if (item.matches('.active')) {
-                    lastShido = item;
-                }
-            }
-            lastShido.classList.remove('active');
             this.shidoCounter[color]--;
+            let counter = this.shidoCounter[color];
+            if (counter === 2) {
+                elements.classList.remove('bg-red-500');
+                elements.classList.add('bg-yellow-500');
+                let winnerColor;
+                color === 'black' ? winnerColor = 'blue' : winnerColor = 'black';
+                this.victory(winnerColor);
+            }
+            elements.firstElementChild.textContent = counter;
             this.revertVictory()
         },
 

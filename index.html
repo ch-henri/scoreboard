@@ -16,73 +16,30 @@
 </head>
 
 <body  x-data="scoreboard" class="h-screen relative flex flex-col font-medium text-black tabular-nums">
-  <!-- Opponent 1 -->
-  <div class="h-[30%] bg-primary text-white grid grid-cols-2">
-    <div class="grid place-items-center">
-      <div class="fs-name font-bold uppercase text-center tracking-wider" contenteditable="true" spellcheck=false>Deschenaux</div>
-    </div>
-    <div class="grid grid-cols-3 items-center">
-      <div class="text-center">
-        <button @click="scoreIppon($el)" data-ippon="black" class="font-score fs-score font-bold">0</button>
-      </div>
-      <div class="grid grid-rows-3">
-        <div></div>
-        <button @click="scoreWazaari($el)" data-wazaari="black" class="font-score fs-score font-bold" x-text="wazaari.black != 1 ? '0' : '1' "></button>
-        <button @click="wazaari.black = 0" class="invisible self-start mx-auto" :class="{'!visible' : wazaari.black == 1}">
-          <span class="sr-only">Delete waza-ari</span>
-          <svg class="text-gray-500 bg-gray-50 rounded-full h-8 w-8 lg:h-12 lg:w-12 mt-1 lg:mt-3 p-2 lg:p-4" fill="currentColor" viewBox="0 0 16 16">
-            <path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8z" />
-          </svg>
-        </button>
-      </div>
-      <div class="grid grid-rows-3 items-center">
-        <div></div>
-        <div class="sm:w-1/2 mx-auto">
-          <button data-shido="black" @click="addShido($el)" x-ref="shidoBlack" class="w-full grid gap-y-1 lg:gap-y-6">
-            <div class="shido-yellow order-3 h-4 lg:h-7 rounded"></div>
-            <div class="shido-yellow order-2 h-4 lg:h-7 rounded"></div>
-            <div class="shido-red order-1 h-4 lg:h-7 rounded"></div>
-          </button>
-        </div>
-        <button @click="deleteShido($refs.shidoBlack)" class="invisible self-start mx-auto" :class="{'!visible' : shidoCounter.black > 0}">
-          <span class="sr-only">Delete shido</span>
-          <svg class="text-gray-500 bg-gray-50 rounded-full h-8 w-8 lg:h-12 lg:w-12 mt-1 lg:mt-3 p-2 lg:p-4" fill="currentColor" viewBox="0 0 16 16">
-            <path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8z" />
-          </svg>
-        </button>
-      </div>
-    </div>
-  </div>
 
-  <!-- Opponent 2 -->
-  <div class="h-[30%] bg-gray-100 grid grid-cols-2">
-    <div class="grid place-items-center mb-4">
-      <div class="fs-name font-bold uppercase text-center tracking-wider" contenteditable="true" spellcheck=false>Deschenaux</div>
+  <!-- Opponent 1 -->
+  <div class="h-[38%] bg-gray-100 grid md:grid-cols-2 gap-x-6">
+    <div class="grid place-items-center">
+      <div class="fs-name font-bold uppercase text-center tracking-wider min-w-24" contenteditable="true" spellcheck=false>Deschenaux</div>
     </div>
-    <div class="grid grid-cols-3 items-center">
-      <div class="text-center">
-        <button @click="scoreIppon($el)" data-ippon="blue" class="font-score fs-score font-bold">0</button>
-      </div>
-      <div class="grid grid-rows-3">
-        <div></div>
+    <div class="flex items-center justify-around gap-x-4 lg:gap-x-12">
+      <button @click="scoreIppon($el)" data-ippon="blue" class="font-score fs-score font-bold">0</button>
+      
+      <div class="relative">
         <button @click="scoreWazaari($el)" data-wazaari="blue" class="font-score fs-score font-bold" x-text="wazaari.blue != 1 ? '0' : '1' "></button>
-        <button @click="wazaari.blue = 0" class="invisible self-start mx-auto" :class="{'!visible' : wazaari.blue == 1}">
+        <button @click="wazaari.blue = 0" class="invisible delete-score" :class="{'!visible' : wazaari.blue == 1}">
           <span class="sr-only">Delete waza-ari</span>
           <svg class="text-gray-500 bg-gray-50 rounded-full h-8 w-8 lg:h-12 lg:w-12 mt-1 lg:mt-3 p-2 lg:p-4" fill="currentColor" viewBox="0 0 16 16">
             <path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8z" />
           </svg>
         </button>
       </div>
-      <div class="grid grid-rows-3 items-center">
-        <div></div>
-        <div class="sm:w-1/2 mx-auto">
-          <button data-shido="blue" @click="addShido($el)" x-ref="shidoBlue" class="w-full grid gap-y-1 lg:gap-y-6">
-            <div class="shido-yellow order-3 h-4 lg:h-7 rounded"></div>
-            <div class="shido-yellow order-2 h-4 lg:h-7 rounded"></div>
-            <div class="shido-red order-1 h-4 lg:h-7 rounded"></div>
-          </button>
-        </div>
-          <button @click="deleteShido($refs.shidoBlue)" class="invisible self-start  mx-auto" :class="{'!visible' : shidoCounter.blue > 0}">
+
+      <div class="relative">
+        <button data-shido="blue" @click="addShido($el)" x-ref="shidoBlue" class="bg-yellow-500">
+          <span class="block font-score fs-score font-bold m-[0.15em]">0</span>
+        </button>
+          <button @click="deleteShido($refs.shidoBlue)" class="invisible delete-score" :class="{'!visible' : shidoCounter.blue > 0}">
             <span class="sr-only">Delete shido</span>
             <svg class="text-gray-500 bg-gray-50 rounded-full h-8 w-8 lg:h-12 lg:w-12 mt-1 lg:mt-3 p-2 lg:p-4" fill="currentColor" viewBox="0 0 16 16">
               <path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8z" />
@@ -92,49 +49,84 @@
     </div>
   </div>
 
+    <!-- Opponent 2 -->
+    <div class="h-[38%] bg-primary text-white grid md:grid-cols-2 gap-x-6">
+      <div class="grid place-items-center">
+        <div class="fs-name font-bold uppercase text-center tracking-wider min-w-24" contenteditable="true" spellcheck=false>Deschenaux</div>
+      </div>
+      <div class="flex items-center justify-around gap-x-4 lg:gap-x-12">
+        <button @click="scoreIppon($el)" data-ippon="black" class="font-score fs-score font-bold">0</button>
+
+        <div class="relative">
+          <button @click="scoreWazaari($el)" data-wazaari="black" class="font-score fs-score font-bold" x-text="wazaari.black != 1 ? '0' : '1' "></button>
+          <button @click="wazaari.black = 0" class="invisible delete-score" :class="{'!visible' : wazaari.black == 1}">
+            <span class="sr-only">Delete waza-ari</span>
+            <svg class="text-gray-500 bg-gray-50 rounded-full h-8 w-8 lg:h-12 lg:w-12 mt-1 lg:mt-3 p-2 lg:p-4" fill="currentColor" viewBox="0 0 16 16">
+              <path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8z" />
+            </svg>
+          </button>
+        </div>
+
+        <div class="relative">
+          <button data-shido="black" @click="addShido($el)" x-ref="shidoBlack" class="bg-yellow-500 text-black">
+            <span class="block font-score fs-score font-bold m-[0.15em]">0</span>
+          </button>
+          <button @click="deleteShido($refs.shidoBlack)" class="invisible delete-score" :class="{'!visible' : shidoCounter.black > 0}">
+            <span class="sr-only">Delete shido</span>
+            <svg class="text-gray-500 bg-gray-50 rounded-full h-8 w-8 lg:h-12 lg:w-12 mt-1 lg:mt-3 p-2 lg:p-4" fill="currentColor" viewBox="0 0 16 16">
+              <path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8z" />
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+
   <!-- Time -->
-  <div :class="{'showOsaekomi' : osaekomiActive}" class="flex-1 grid hideOsaekomi px-8">
+  <div :class="{'showOsaekomi' : osaekomiActive}" class="flex-1 grid hideOsaekomi bg-neutral-900 text-neutral-200 px-8">
         
     <!-- Main timer -->
-    <div class="h-full flex flex-col justify-around sm:order-2" x-transition>
+    <div class="h-full grid place-items-center sm:order-2" x-transition>
       <div class="place-self-center">
         <button @click="isRunning ? mate : ajime" :class="{'text-green-600': isRunning }" :disabled="timeLeft === 0 && !goldenScore" class="fs-timer font-score">
           <span id="timer">04:00</span>
         </button>
       </div>
-      <div class="grid mb-8">
-        <button :class="{'!visible' : !osaekomiActive && (timeLeft !== 0)}" @click="osaekomi($el)" class="invisible top-50 left-0 md:text-lg lg:text-2xl font-bold text-gray-400">OSAEKOMI</button>
-        <button :class="{'!block' : timeLeft === 0 && !goldenScore}" @click="goldenScore = true" class="hidden top-50 left-0  md:text-lg lg:text-2xl font-bold text-yellow-600">GOLDEN SCORE</button>
-      </div>
     </div>
 
     <!-- Osaekomi timer -->
     <div class="h-full grid place-items-center">
-      <div style="display:none" x-show="osaekomiActive" class="grid items-center">
-        <div class="grid grid-cols-2">
-          <form action="" class="flex flex-col -mr-px">
-            <label for="osaekomi-black" :class="{'animate-pulse' : !osaekomiColor}" class="fs-osaekomi-label text-gray-300 font-bold uppercase text-center border-2 border-gray-200 cursor-pointer has-[:checked]:text-black has-[:checked]:border-black py-2 lg:py-5">
-              <span>White</span>
-              <input type="radio" id="osaekomi-black" class="hidden" name="color" value="black" x-model="osaekomiColor" data-osaekomiColor="black" autocomplete="off" />
-            </label>
-            <label for="osaekomi-blue" :class="{'animate-pulse' : !osaekomiColor}" class="fs-osaekomi-label text-blue-200 font-bold uppercase text-center border-2 border-gray-200 cursor-pointer has-[:checked]:text-blue-700 has-[:checked]:border-blue-700 py-2 lg:py-5">
-              <span>blue</span>
-              <input type="radio" id="osaekomi-blue" class="hidden" name="color" value="blue" x-model="osaekomiColor" data-osaekomiColor="blue" autocomplete="off" />
-            </label>
-          </form>
-          <button @click="osaekomiIsPaused = !osaekomiIsPaused" :class="{ '!border-black !text-black' : osaekomiColor === 'black', '!border-blue-700 !text-blue-700' : osaekomiColor === 'blue'}" class="relative grid place-items-center h-full border-2 border-gray-200 px-2 lg:px-5">
-            <div :class="{'opacity-25' : osaekomiIsPaused}" id="osaekomiTimer" class="fs-osaekomi leading-none">00</div>
-            <div class="absolute inset-0 grid place-items-center">
-              <div x-show="osaekomiIsPaused">
-                <svg class="block h-6 w-6 lg:h-12 lg:w-12" viewBox="0 0 16 16" fill="currentColor">
-                  <path d="M16 8A8 8 0 110 8a8 8 0 0116 0M6.25 5C5.56 5 5 5.56 5 6.25v3.5a1.25 1.25 0 102.5 0v-3.5C7.5 5.56 6.94 5 6.25 5m3.5 0c-.69 0-1.25.56-1.25 1.25v3.5a1.25 1.25 0 102.5 0v-3.5C11 5.56 10.44 5 9.75 5" />
-                </svg>
+        <div style="display:none" x-show="osaekomiActive" class="grid items-center">
+          <div class="grid grid-cols-2">
+            <form action="" class="flex flex-col -mr-px">
+              <label for="osaekomi-black" :class="{'animate-pulse' : !osaekomiColor}" class="fs-osaekomi-label text-gray-300 font-bold uppercase text-center border-2 border-white/25 cursor-pointer has-[:checked]:text-white has-[:checked]:bg-black has-[:checked]:border-white py-0.5 lg:py-5">
+                <span>White</span>
+                <input type="radio" id="osaekomi-black" class="hidden" name="color" value="black" x-model="osaekomiColor" data-osaekomiColor="black" autocomplete="off" />
+              </label>
+              <label for="osaekomi-blue" :class="{'animate-pulse' : !osaekomiColor}" class="fs-osaekomi-label text-blue-200 font-bold uppercase text-center border-2 border-white/25 cursor-pointer has-[:checked]:bg-primary has-[:checked]:border-primary py-2 lg:py-5">
+                <span>blue</span>
+                <input type="radio" id="osaekomi-blue" class="hidden" name="color" value="blue" x-model="osaekomiColor" data-osaekomiColor="blue" autocomplete="off" />
+              </label>
+            </form>
+            <button 
+              @click="osaekomiIsPaused = !osaekomiIsPaused" 
+              :class="{ '!border-white' : osaekomiColor === 'black', '!border-primary' : osaekomiColor === 'blue'}" 
+              class="relative grid place-items-center h-full text-white border-2 border-white/25 px-2 lg:px-5"
+            >
+              <div :class="{'opacity-25' : osaekomiIsPaused}" id="osaekomiTimer" class="fs-osaekomi leading-none">00</div>
+              <div class="absolute inset-0 grid place-items-center">
+                <div x-show="osaekomiIsPaused">
+                  <svg class="block h-6 w-6 lg:h-12 lg:w-12" viewBox="0 0 16 16" fill="currentColor">
+                    <path d="M16 8A8 8 0 110 8a8 8 0 0116 0M6.25 5C5.56 5 5 5.56 5 6.25v3.5a1.25 1.25 0 102.5 0v-3.5C7.5 5.56 6.94 5 6.25 5m3.5 0c-.69 0-1.25.56-1.25 1.25v3.5a1.25 1.25 0 102.5 0v-3.5C11 5.56 10.44 5 9.75 5" />
+                  </svg>
+                </div>
               </div>
-            </div>
-          </button>
+            </button>
+          </div>
+          <button x-show="osaekomiActive" @click="toketa($el)" class="self-start md:text-lg lg:text-2xl font-bold text-gray-600 mt-1 lg:mt-4">TOKETA</button>
         </div>
-      </div>
-      <button x-show="osaekomiActive" @click="toketa($el)" class="self-start md:text-lg lg:text-2xl font-bold text-gray-600">TOKETA</button>
+
+        <button :class="{'!block' : !osaekomiActive && (timeLeft !== 0)}" @click="osaekomi($el)" class="hidden md:text-lg lg:text-2xl font-bold text-gray-400 mt-auto mb-6">OSAEKOMI</button>
+        <button :class="{'!block' : timeLeft === 0 && !goldenScore}" @click="goldenScore = true" class="hidden md:text-lg lg:text-2xl font-bold text-yellow-600 mt-auto mb-6">GOLDEN SCORE</button>
     </div>
 
 

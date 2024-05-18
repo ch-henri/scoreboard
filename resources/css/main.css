@@ -23,13 +23,6 @@
   font-style: normal;
 }
 
-:root {
-  --fluid-30-200: clamp(1.875rem, -0.1488rem + 10.119vi, 12.5rem);
-  --fluid-25-100: clamp(1.5625rem, 0.6696rem + 4.4643vi, 6.25rem);
-  --fluid-12-30: clamp(0.75rem, 0.5357rem + 1.0714vi, 1.875rem);
-  --fluid-16-48: clamp(1rem, 0.619rem + 1.9048vi, 3rem);
-}
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -62,19 +55,48 @@
   }
 }
 
-
-.shido-yellow,
-.shido-red {
-  @apply bg-gray-300;
+:root {
+  /* start width: 300px - end width: 2000px */
+  --fluid-30-260: clamp(1.875rem, -0.6618rem + 13.5294vi, 16.25rem);
+  --fluid-45-230: clamp(2.8125rem, 0.7721rem + 10.8824vi, 14.375rem);
+  --fluid-16-120: clamp(1rem, -0.1471rem + 6.1176vi, 7.5rem);
+  --fluid-24-140: clamp(1.5rem, 0.2206rem + 6.8235vi, 8.75rem);
+  --fluid-12-30: clamp(0.75rem, 0.5357rem + 1.0714vi, 1.875rem);
+  --fluid-16-48: clamp(1rem, 0.619rem + 1.9048vi, 3rem);
 }
 
-.shido-yellow.active {
-  @apply bg-yellow-500;
+
+/* Font size responsive */
+.fs-timer {
+  font-size: var(--fluid-30-260);
+  line-height: 1;
 }
 
-.shido-red.active {
-  @apply bg-red-500;
+.fs-score {
+  font-size: var(--fluid-45-230);
+  line-height: 1;
+  height: 1.2ch;
 }
+
+.fs-name {
+  font-size: var(--fluid-16-120);
+  line-height: 1.2;
+}
+
+.fs-osaekomi {
+  font-size: var(--fluid-24-140);
+}
+
+.fs-osaekomi-label {
+  font-size: var(--fluid-12-30);
+}
+
+.fs-modal-title {
+  font-size: var(--fluid-12-30);
+}
+
+/* ---------------------- */
+
 
 .hideOsaekomi {
   grid-template-rows: 1fr 0.1fr;
@@ -100,35 +122,12 @@
 
 
 
-/* Font size responsive */
 
-.fs-timer {
-  font-size: var(--fluid-30-200);
-  line-height: 1;
-}
-
-.fs-score {
-  font-size: var(--fluid-25-100);
-  line-height: 1;
-}
-
-.fs-score-label {
-  font-size: var(--fluid-12-30);
-}
-
-.fs-name {
-  font-size: var(--fluid-16-48);
-  line-height: 1.2;
-}
-
-.fs-osaekomi {
-  font-size: var(--fluid-25-100);
-}
-
-.fs-osaekomi-label {
-  font-size: var(--fluid-12-30);
-}
-
-.fs-modal-title {
-  font-size: var(--fluid-12-30);
+.delete-score {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  left: 0;
+  display: flex;
+  justify-content: center;
 }
