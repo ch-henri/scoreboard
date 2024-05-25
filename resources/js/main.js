@@ -9,6 +9,9 @@ window.addEventListener('alpine:init', () => {
     Alpine.data('scoreboard', () => ({
         timer: document.querySelector('#timer'),
         fightDuration: 50, // 1/10 sec
+        oseakomiWazaari: 10,
+        oseakomiIppon: 20,
+        accentColor: 'blue',
         timeLeft: null,
         timerInterval: 100, // milliseconds
         expectedTimerCb: null,
@@ -19,11 +22,11 @@ window.addEventListener('alpine:init', () => {
         isRunning: false,
         goldenScore: false,
         shidoCounter: {
-            black: 0,
+            white: 0,
             blue: 0,
         },
         wazaari: {
-          black: 0,
+          white: 0,
           blue: 0,  
         },
         osaekomiCountdown: null,
@@ -81,6 +84,8 @@ window.addEventListener('alpine:init', () => {
             this.updateTimer();
             this.revertVictory();
             this.goldenScore = false;
+            this.wazaari.white = 0;
+            this.wazaari.blue = 0;
         },
 
         // ----------------
@@ -98,8 +103,8 @@ window.addEventListener('alpine:init', () => {
             this.osaekomiCountdown = setInterval(() => {
                 if (!this.osaekomiIsPaused) {
                     countUp++;
-                    displayOsaekomi.textContent = `${countUp < 10 ? '0' : ''}${countUp}`;
-                    if (countUp == 10 || countUp == 20) {
+                    displayOsaekomi.textContent = `${countUp < '10' ? '0' : ''}${countUp}`;
+                    if (countUp == this.oseakomiWazaari || countUp == this.oseakomiIppon) {
                         this.scoreWazaari(document.querySelector(`[data-wazaari="${this.osaekomiColor}"]`));
                     }
                 }
@@ -149,7 +154,7 @@ window.addEventListener('alpine:init', () => {
                 elements.classList.remove('bg-yellow-500');
                 elements.classList.add('bg-red-500');
                 let winnerColor;
-                color === 'black' ? winnerColor = 'blue' : winnerColor = 'black';
+                color === 'white' ? winnerColor = 'blue' : winnerColor = 'white';
                 this.victory(winnerColor);
             }
         },
@@ -162,7 +167,7 @@ window.addEventListener('alpine:init', () => {
                 elements.classList.remove('bg-red-500');
                 elements.classList.add('bg-yellow-500');
                 let winnerColor;
-                color === 'black' ? winnerColor = 'blue' : winnerColor = 'black';
+                color === 'white' ? winnerColor = 'blue' : winnerColor = 'white';
                 this.victory(winnerColor);
             }
             elements.firstElementChild.textContent = counter;
@@ -190,18 +195,35 @@ window.addEventListener('alpine:init', () => {
 
         // ---------------------
 
+
+        fillDialog() {
+            document.querySelector('#seconds').value = `${Math.floor((this.fightDuration % 600) / 10) < 10 ? '0' : ''}${Math.floor((this.fightDuration % 600) / 10)}`;
+            document.querySelector('#minutes').value = `${Math.floor(this.fightDuration / 600) < 10 ? '0' : '' }${Math.floor(this.fightDuration / 600)}`;
+            document.querySelector('#wazaari').value = `${this.oseakomiWazaari}`;
+            document.querySelector('#ippon').value = `${this.oseakomiIppon}`;
+        },
+
         paramUpdate(event) {
             dialog.close();
-            let seconds = parseInt(document.querySelector('#seconds').value, 10);
-            let minutes = parseInt(document.querySelector('#minutes').value, 10);
-            console.log(minutes);
-            console.log(!!seconds);
-            if(minutes >= 0 && seconds >= 0) {
-                let newTime = ((minutes * 60) + seconds) * 10;
-                console.log(newTime);
-                this.fightDuration =  newTime;
-                this.init();
+            let minutes = parseInt(document.querySelector('#minutes').value, 10) || 0;
+            let seconds = parseInt(document.querySelector('#seconds').value, 10) || 0;
+            let wazaari = parseInt(document.querySelector('#wazaari').value, 10) || 0;
+            let ippon = parseInt(document.querySelector('#ippon').value, 10) || 0;
+            let selectedColor = document.querySelector('input[name="accentColor"]:checked').value;
+
+            let newTime = ((minutes * 60) + seconds) * 10;
+            this.fightDuration =  newTime;
+
+            this.oseakomiWazaari = wazaari;
+            this.oseakomiIppon = ippon;
+
+                        
+            if(selectedColor !== this.accentColor) {
+                this.accentColor = selectedColor;
+                document.documentElement.style.setProperty('--accent-color', `var(--${selectedColor})`);
             }
+
+            this.init();
         }
     }))
 

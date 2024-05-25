@@ -11,7 +11,7 @@ export default {
         score: ['monda', ...defaultTheme.fontFamily.mono],
       },
       colors: {
-        primary: '#0459A8',
+      primary: 'rgb(var(--accent-color) / <alpha-value>)',
       }
     },
   },
