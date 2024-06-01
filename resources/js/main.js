@@ -105,6 +105,7 @@ window.addEventListener('alpine:init', () => {
                     countUp++;
                     displayOsaekomi.textContent = `${countUp < '10' ? '0' : ''}${countUp}`;
                     if (countUp == this.oseakomiWazaari || countUp == this.oseakomiIppon) {
+                        this.wazaari[this.osaekomiColor] === 1 && this.gong.play();
                         this.scoreWazaari(document.querySelector(`[data-wazaari="${this.osaekomiColor}"]`));
                     }
                 }
@@ -147,7 +148,7 @@ window.addEventListener('alpine:init', () => {
 
         addShido(elements) {
             let color = elements.dataset.shido;
-            this.shidoCounter[color]++;
+            this.shidoCounter[color] < 3 && this.shidoCounter[color]++;
             let counter = this.shidoCounter[color];            
             elements.firstElementChild.textContent = counter;
             if (counter === 3) {
@@ -180,7 +181,7 @@ window.addEventListener('alpine:init', () => {
             this.mate();
             this.winner = color;
             this.osaekomiIsPaused = true;
-            this.gong.play();
+            console.log(this.shidoCounter[color]);
         },
 
         revertVictory() {

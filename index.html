@@ -18,6 +18,14 @@
   <script type="module" src="resources/js/main.js"></script>
   <script type="module" src="resources/js/modal.js"></script>
   <title>Judo Scoreboard</title>
+
+  <script>
+    window.addEventListener('load', () => {
+      if ("serviceWorker" in navigator) {
+        navigator.serviceWorker.register("resources/js/service-worker.js");
+      }
+    })
+  </script>
 </head>
 
 <body  x-data="scoreboard" class="h-screen relative flex flex-col font-medium text-black tabular-nums">
@@ -87,7 +95,7 @@
     </div>
 
   <!-- Time section -->
-  <div :class="{'showOsaekomi' : osaekomiActive}" class="h-[30%] grid hideOsaekomi bg-neutral-900 text-neutral-200 px-8">
+  <div :class="{'showOsaekomi' : osaekomiActive}" class="h-[32%] grid hideOsaekomi bg-neutral-900 text-neutral-200 px-8">
         
     <!-- Main timer -->
     <div class="h-full grid place-items-center sm:order-2" x-transition>
