@@ -9,15 +9,13 @@ window.Alpine = Alpine;
 window.addEventListener('alpine:init', () => {
     Alpine.data('scoreboard', () => ({
         timer: document.querySelector('#timer'),
-        fightDuration: 50, // 1/10 sec
+        fightDuration: 650, // 1/10 sec
         oseakomiWazaari: 10,
         oseakomiIppon: 20,
         accentColor: 'blue',
         timeLeft: null,
         timerInterval: 100, // milliseconds
         expectedTimerCb: null,
-        minutes: null,
-        seconds: null,
         spareSeconds: null,
         countdown: null,
         isRunning: false,
@@ -75,9 +73,9 @@ window.addEventListener('alpine:init', () => {
         },
 
         updateTimer() {
-            this.minutes = Math.floor(this.timeLeft / 600);
-            this.seconds = (this.timeLeft % 600) / 10;
-            this.timer.textContent = `${this.minutes}:${this.seconds < 10 ? '0' : ''}${this.seconds}`;
+            let minutes = Math.floor(this.timeLeft / 600);
+            let seconds = (this.timeLeft % 600) / 10;
+            this.timer.textContent = `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
         },
 
         reset() {
@@ -199,22 +197,25 @@ window.addEventListener('alpine:init', () => {
 
 
         fillDialog() {
-            document.querySelector('#seconds').value = `${Math.floor((this.fightDuration % 600) / 10) < 10 ? '0' : ''}${Math.floor((this.fightDuration % 600) / 10)}`;
-            document.querySelector('#minutes').value = `${Math.floor(this.fightDuration / 600) < 10 ? '0' : '' }${Math.floor(this.fightDuration / 600)}`;
             document.querySelector('#wazaari').value = `${this.oseakomiWazaari}`;
             document.querySelector('#ippon').value = `${this.oseakomiIppon}`;
         },
 
-        paramUpdate(event) {
-            dialog.close();
-            let minutes = parseInt(document.querySelector('#minutes').value, 10) || 0;
-            let seconds = parseInt(document.querySelector('#seconds').value, 10) || 0;
+        updateFightDuration(unit) {
+            switch(unit) {
+                case 'addMin': this.fightDuration += 600; break;
+                case 'delMin': this.fightDuration -= 600; break;
+                case 'addSec': this.fightDuration += 10; break;
+                case 'delSec': this.fightDuration -= 10; break;
+            }
+            this.init();
+        },
+        
+
+        paramUpdate() {
             let wazaari = parseInt(document.querySelector('#wazaari').value, 10) || 0;
             let ippon = parseInt(document.querySelector('#ippon').value, 10) || 0;
             let selectedColor = document.querySelector('input[name="accentColor"]:checked').value;
-
-            let newTime = ((minutes * 60) + seconds) * 10;
-            this.fightDuration =  newTime;
 
             this.oseakomiWazaari = wazaari;
             this.oseakomiIppon = ippon;
@@ -226,7 +227,30 @@ window.addEventListener('alpine:init', () => {
             }
 
             this.init();
-        }
+        },
+        // paramUpdate(event) {
+        //     dialog.close();
+        //     let minutes = parseInt(document.querySelector('#minutes').value, 10) || 0;
+        //     let seconds = parseInt(document.querySelector('#seconds').value, 10) || 0;
+        //     let wazaari = parseInt(document.querySelector('#wazaari').value, 10) || 0;
+        //     let ippon = parseInt(document.querySelector('#ippon').value, 10) || 0;
+        //     let selectedColor = document.querySelector('input[name="accentColor"]:checked').value;
+
+        //     let newTime = ((minutes * 60) + seconds) * 10;
+        //     this.fightDuration =  newTime;
+
+        //     this.oseakomiWazaari = wazaari;
+        //     this.oseakomiIppon = ippon;
+
+                        
+        //     if(selectedColor !== this.accentColor) {
+        //         this.accentColor = selectedColor;
+        //         document.documentElement.style.setProperty('--accent-color', `var(--${selectedColor})`);
+        //     }
+
+        //     this.init();
+        // }
+
     }))
 
 })

@@ -92,7 +92,7 @@
     <div class="h-full grid place-items-center sm:order-2" x-transition>
       <div class="place-self-center">
         <button @click="isRunning ? mate : ajime" :class="{'text-green-600': isRunning }" :disabled="timeLeft === 0 && !goldenScore" class="fs-timer font-score font-bold">
-          <span id="timer">04:00</span>
+          <span id="timer">00:00</span>
         </button>
       </div>
     </div>
@@ -160,30 +160,19 @@
             <div class="flex-1 grid gap-y-2">
               <label for="minutes" class="">Minutes</label>
               <div class="h-14 grid grid-cols-3 border border-black">
-                <button type="button" class="bg-black text-white leading-none md:text-3xl">+</button>
-                <div class="md:text-2xl self-center text-center px-1 py-1">01</div>
-                <button type="button" class="bg-black text-white leading-none md:text-3xl">–</button>
+                <button type="button" @click="updateFightDuration('addMin')" class="bg-black text-white leading-none md:text-3xl">+</button>
+                <span class="md:text-2xl border-0 self-center text-center px-1 py-1" x-text="Math.floor(timeLeft / 600)"></span>
+                <button type="button" @click="updateFightDuration('delMin')" class="bg-black text-white leading-none md:text-3xl">–</button>
               </div>
             </div>
 
             <div class="flex-1 grid gap-y-2">
-              <label for="minutes" class="">Secondes</label>
+              <label for="secondes" class="">Secondes</label>
               <div class="h-14 grid grid-cols-3 border border-black">
-                <button type="button" class="bg-black text-white leading-none md:text-3xl">+</button>
-                <div class="md:text-2xl self-center text-center px-1 py-1">01</div>
-                <button type="button" class="bg-black text-white leading-none md:text-3xl">–</button>
+                <button type="button" @click="updateFightDuration('addSec')" class="bg-black text-white leading-none md:text-3xl">+</button>
+                <span class="md:text-2xl self-center text-center px-1 py-1" x-text="(timeLeft % 600) / 10"></span>
+                <button type="button" @click="updateFightDuration('delSec')" class="bg-black text-white leading-none md:text-3xl">–</button>
               </div>
-            </div>
-          </div>
-
-          <div class="flex flex-col sm:flex-row gap-x-6 gap-y-4">
-            <div class="flex-1 grid gap-y-2">
-              <label for="minutes" class="">Minutes</label>
-              <input value="" type="number" name="minutes" id="minutes" class="block w-full md:text-2xl" autocomplete="off">
-            </div>
-            <div class="flex-1 grid gap-y-2">
-              <label for="seconds" class="">Secondes</label>
-              <input value="" type="number" name="seconds" id="seconds" class="block w-full md:text-2xl" autocomplete="off" min="0" max="59">
             </div>
           </div>
 
