@@ -12,7 +12,6 @@ window.addEventListener('alpine:init', () => {
         fightDuration: 650, // 1/10 sec
         oseakomiWazaari: 10,
         oseakomiIppon: 20,
-        accentColor: 'blue',
         timeLeft: null,
         timerInterval: 100, // milliseconds
         expectedTimerCb: null,
@@ -195,14 +194,8 @@ window.addEventListener('alpine:init', () => {
 
         // ---------------------
 
-
-        fillDialog() {
-            document.querySelector('#wazaari').value = `${this.oseakomiWazaari}`;
-            document.querySelector('#ippon').value = `${this.oseakomiIppon}`;
-        },
-
-        updateFightDuration(unit) {
-            switch(unit) {
+        setFightTime(action) {
+            switch(action) {
                 case 'addMin': this.fightDuration += 600; break;
                 case 'delMin': this.fightDuration -= 600; break;
                 case 'addSec': this.fightDuration += 10; break;
@@ -210,46 +203,22 @@ window.addEventListener('alpine:init', () => {
             }
             this.init();
         },
-        
 
-        paramUpdate() {
-            let wazaari = parseInt(document.querySelector('#wazaari').value, 10) || 0;
-            let ippon = parseInt(document.querySelector('#ippon').value, 10) || 0;
-            let selectedColor = document.querySelector('input[name="accentColor"]:checked').value;
-
-            this.oseakomiWazaari = wazaari;
-            this.oseakomiIppon = ippon;
-
-                        
-            if(selectedColor !== this.accentColor) {
-                this.accentColor = selectedColor;
-                document.documentElement.style.setProperty('--accent-color', `var(--${selectedColor})`);
+        setOsaekomiTime(action) {
+            switch(action) {
+                case 'addWazaari': this.oseakomiWazaari += 1; break;
+                case 'delWazaari': this.oseakomiWazaari -= 1; break;
+                case 'addIppon': this.oseakomiIppon += 1; break;
+                case 'delIppon': this.oseakomiIppon -= 1; break;
             }
-
             this.init();
         },
-        // paramUpdate(event) {
-        //     dialog.close();
-        //     let minutes = parseInt(document.querySelector('#minutes').value, 10) || 0;
-        //     let seconds = parseInt(document.querySelector('#seconds').value, 10) || 0;
-        //     let wazaari = parseInt(document.querySelector('#wazaari').value, 10) || 0;
-        //     let ippon = parseInt(document.querySelector('#ippon').value, 10) || 0;
-        //     let selectedColor = document.querySelector('input[name="accentColor"]:checked').value;
+        
 
-        //     let newTime = ((minutes * 60) + seconds) * 10;
-        //     this.fightDuration =  newTime;
+        setAccentColor(color) {
+            document.documentElement.style.setProperty('--accent-color', `var(--${color})`);
+        },
 
-        //     this.oseakomiWazaari = wazaari;
-        //     this.oseakomiIppon = ippon;
-
-                        
-        //     if(selectedColor !== this.accentColor) {
-        //         this.accentColor = selectedColor;
-        //         document.documentElement.style.setProperty('--accent-color', `var(--${selectedColor})`);
-        //     }
-
-        //     this.init();
-        // }
 
     }))
 
