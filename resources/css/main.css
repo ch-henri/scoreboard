@@ -1,46 +1,54 @@
-@font-face {
-  font-family: "monda";
-  src: url('/font/monda.woff2');
-  font-weight: 700;
-  font-display: swap;
-  font-style: normal;
-}
 
-
-@font-face {
-  font-family: "monda";
-  src: url('/font/Monda-Regular.woff2');
-  font-weight: 400;
-  font-display: swap;
-  font-style: normal;
-}
-
-@font-face {
-  font-family: "roboto";
-  src: url('/font/roboto-medium.woff2');
-  font-weight: 500;
-  font-display: swap;
-  font-style: normal;
-}
-
-
-@font-face {
-  font-family: "roboto";
-  src: url('/font/roboto-bold.woff2');
-  font-weight: 700;
-  font-display: swap;
-  font-style: normal;
-}
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer base {
+  
   :root {
     --blue: 62 100 180;
     --red: 189 0 0;
     --accent-color: var(--blue);
+  }
+
+  /* For touch screen. Prevent zoom on double tap  */
+  * {
+      touch-action: manipulation;
+  }
+
+  @font-face {
+    font-family: "monda";
+    src: url('/fonts/monda.woff2') format("woff2");
+    font-weight: 700;
+    font-display: swap;
+    font-style: normal;
+  }
+  
+  
+  @font-face {
+    font-family: "monda";
+    src: url('/fonts/monda-regular.woff2') format("woff2");
+    font-weight: 400;
+    font-display: swap;
+    font-style: normal;
+  }
+  
+  @font-face {
+    font-family: "roboto";
+    src: url('/fonts/roboto-medium.woff2') format("woff2");
+    font-weight: 500;
+    font-display: swap;
+    font-style: normal;
+  }
+  
+  
+  @font-face {
+    font-family: "roboto";
+    src: url('/fonts/roboto-bold.woff2') format("woff2");
+    font-weight: 700;
+    font-display: swap;
+    font-style: normal;
   }
 }
 
