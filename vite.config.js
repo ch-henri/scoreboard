@@ -5,7 +5,7 @@ import { VitePWA } from 'vite-plugin-pwa';
 export default defineConfig({
     plugins: [
         VitePWA({
-            includeAssets: ['/images/pwa-icon/512.png', '/images/pwa-icon/192.png'],
+            includeAssets: ['/images/pwa-icon/512.png', '/images/pwa-icon/192.png', '/font/*.woof2', '/gong.mp3' ],
             manifest: {
                 name: 'Judo Scoreboard',
                 theme_color: '#ffffff',
