@@ -14,8 +14,9 @@ window.addEventListener('alpine:init', () => {
             opponentOne: this.$persist('white'),
             opponentTwo: this.$persist('blue'),
             fightDuration: this.$persist(2400), // 1/10 sec
-            oseakomiWazaari: this.$persist(10),
-            oseakomiIppon: this.$persist(20),
+            osaekomiWazaari: this.$persist(10),
+            osaekomiYuko: this.$persist(5),
+            osaekomiIppon: this.$persist(20),
             timeLeft: this.$persist(null),
             timerInterval: 100, // milliseconds
             expectedTimerCb: null,
@@ -31,6 +32,10 @@ window.addEventListener('alpine:init', () => {
                 white: 0,
                 blue: 0,  
             }),
+            yuko: this.$persist({
+                white: 0,
+                blue: 0,  
+            }),            
             osaekomiCountdown: null,
             osaekomiActive: false,
             osaekomiIsPaused: false,
@@ -88,6 +93,8 @@ window.addEventListener('alpine:init', () => {
                 this.goldenScore = false;
                 this.wazaari.white = 0;
                 this.wazaari.blue = 0;
+                this.yuko.white = 0;
+                this.yuko.blue = 0;                
             },
     
             // ----------------
@@ -105,7 +112,10 @@ window.addEventListener('alpine:init', () => {
                     if (!this.osaekomiIsPaused) {
                         countUp++;
                         displayOsaekomi.textContent = `${countUp < '10' ? '0' : ''}${countUp}`;
-                        if (countUp == this.oseakomiWazaari || countUp == this.oseakomiIppon) {
+                        if (countUp == this.osaekomiYuko) {
+                            this.scoreYuko(document.querySelector(`[data-yuko="${this.osaekomiColor}"]`));
+                        }                        
+                        if (countUp == this.osaekomiWazaari || countUp == this.osaekomiIppon) {
                             this.wazaari[this.osaekomiColor] === 1 && this.gong.play();
                             this.scoreWazaari(document.querySelector(`[data-wazaari="${this.osaekomiColor}"]`));
                         }
@@ -125,6 +135,10 @@ window.addEventListener('alpine:init', () => {
             },
     
             // -----------------
+            scoreYuko(elm) {
+                this.yuko[elm.dataset.yuko]++;
+            },
+
             scoreWazaari(elm) {
                 let color = elm.dataset.wazaari;
                 // si 0 ou 1 wazaari -> wazaari++
@@ -206,10 +220,12 @@ window.addEventListener('alpine:init', () => {
     
             setOsaekomiTime(action) {
                 switch(action) {
-                    case 'addWazaari': this.oseakomiWazaari += 1; break;
-                    case 'delWazaari': this.oseakomiWazaari -= 1; break;
-                    case 'addIppon': this.oseakomiIppon += 1; break;
-                    case 'delIppon': this.oseakomiIppon -= 1; break;
+                    case 'addYuko': this.osaekomiYuko++; break;
+                    case 'delYuko': this.osaekomiYuko--; break;                    
+                    case 'addWazaari': this.osaekomiWazaari++; break;
+                    case 'delWazaari': this.osaekomiWazaari--; break;
+                    case 'addIppon': this.osaekomiIppon++; break;
+                    case 'delIppon': this.osaekomiIppon--; break;
                 }
                 this.init();
             },

@@ -28,7 +28,7 @@
       <div class="flex items-center justify-around gap-x-4 lg:gap-x-12">
         <button @click="scoreIppon($el)" data-ippon="white" class="font-score fs-score">0</button>
         <div class="relative z-10">
-          <button @click="scoreWazaari($el)" data-wazaari="white" class="font-score fs-score" x-text="wazaari.white != 1 ? '0' : '1' ">0</button>
+          <button @click="scoreWazaari($el)" data-wazaari="white" class="font-score fs-score" x-text="wazaari.white == 1 ? '1' : '0' ">0</button>
           <button @click="wazaari.white = 0" class="invisible delete-score" :class="{'!visible' : wazaari.white == 1}">
             <span class="sr-only">Delete waza-ari</span>
             <svg class="text-gray-500 bg-gray-50 rounded-full h-8 w-8 lg:h-12 lg:w-12 mt-1 lg:mt-3 p-2 lg:p-4" fill="currentColor" width="16" height="16" width="16" height="16" viewBox="0 0 16 16">
@@ -36,6 +36,16 @@
             </svg>
           </button>
         </div>
+
+        <div class="relative z-10">
+          <button @click="scoreYuko($el)" data-yuko="white" class="font-score fs-score" x-text="yuko.white">0</button>
+          <button @click="yuko.white--" class="invisible delete-score" :class="{'!visible' : yuko.white != 0}">
+            <span class="sr-only">Delete Yuko</span>
+            <svg class="text-gray-500 bg-gray-50 rounded-full h-8 w-8 lg:h-12 lg:w-12 mt-1 lg:mt-3 p-2 lg:p-4" fill="currentColor" width="16" height="16" width="16" height="16" viewBox="0 0 16 16">
+              <path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8z" />
+            </svg>
+          </button>
+        </div>        
 
         <div class="relative z-10">
           <button data-shido="white" @click="addShido($el)" x-ref="shidoWhite" class="bg-yellow-500 text-black">
@@ -60,7 +70,7 @@
         <button @click="scoreIppon($el)" data-ippon="blue" class="font-score fs-score">0</button>
         
         <div class="relative z-20">
-          <button @click="scoreWazaari($el)" data-wazaari="blue" class="font-score fs-score" x-text="wazaari.blue != 1 ? '0' : '1' ">0</button>
+          <button @click="scoreWazaari($el)" data-wazaari="blue" class="font-score fs-score" x-text="wazaari.blue == 1 ? '1' : '0' ">0</button>
           <button @click="wazaari.blue = 0" class="invisible delete-score" :class="{'!visible' : wazaari.blue == 1}">
             <span class="sr-only">Delete waza-ari</span>
             <svg class="text-gray-50 bg-gray-50/25 rounded-full h-8 w-8 lg:h-12 lg:w-12 mt-1 lg:mt-3 p-2 lg:p-4" fill="currentColor" width="16" height="16" viewBox="0 0 16 16">
@@ -68,6 +78,16 @@
             </svg>
           </button>
         </div>
+
+        <div class="relative z-20">
+          <button @click="scoreYuko($el)" data-yuko="blue" class="font-score fs-score" x-text="yuko.blue">0</button>
+          <button @click="yuko.blue--" class="invisible delete-score" :class="{'!visible' : yuko.blue != 0}">
+            <span class="sr-only">Delete yuko</span>
+            <svg class="text-gray-50 bg-gray-50/25 rounded-full h-8 w-8 lg:h-12 lg:w-12 mt-1 lg:mt-3 p-2 lg:p-4" fill="currentColor" width="16" height="16" viewBox="0 0 16 16">
+              <path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8z" />
+            </svg>
+          </button>
+        </div>        
 
         <div class="relative z-20">
           <button data-shido="blue" @click="addShido($el)" x-ref="shidoBlue" class="bg-yellow-500">
@@ -176,11 +196,21 @@
 
           <h2 class="fs-modal-title mb-2 mt-8">Osaekomi</h2>
           <div class="flex flex-col sm:flex-row gap-x-6 gap-y-4">
+
+            <div class="flex-1 grid gap-y-2">
+              <div>Yuko (sec)</div>
+              <div class="h-14 grid grid-cols-3 border border-black">
+                <button type="button" @click="setOsaekomiTime('addYuko')" class="bg-black text-white leading-none md:text-3xl">+</button>
+                <span class="md:text-2xl border-0 self-center text-center px-1 py-1" x-text="osaekomiYuko"></span>
+                <button type="button" @click="setOsaekomiTime('delYuko')" class="bg-black text-white leading-none md:text-3xl">–</button>
+              </div>
+            </div>
+
             <div class="flex-1 grid gap-y-2">
               <div>Waza-ari (sec)</div>
               <div class="h-14 grid grid-cols-3 border border-black">
                 <button type="button" @click="setOsaekomiTime('addWazaari')" class="bg-black text-white leading-none md:text-3xl">+</button>
-                <span class="md:text-2xl border-0 self-center text-center px-1 py-1" x-text="oseakomiWazaari"></span>
+                <span class="md:text-2xl border-0 self-center text-center px-1 py-1" x-text="osaekomiWazaari"></span>
                 <button type="button" @click="setOsaekomiTime('delWazaari')" class="bg-black text-white leading-none md:text-3xl">–</button>
               </div>
             </div>
@@ -189,7 +219,7 @@
               <div>Ippon (sec)</div>
               <div class="h-14 grid grid-cols-3 border border-black">
                 <button type="button" @click="setOsaekomiTime('addIppon')" class="bg-black text-white leading-none md:text-3xl">+</button>
-                <span class="md:text-2xl self-center text-center px-1 py-1" x-text="oseakomiIppon"></span>
+                <span class="md:text-2xl self-center text-center px-1 py-1" x-text="osaekomiIppon"></span>
                 <button type="button" @click="setOsaekomiTime('delIppon')" class="bg-black text-white leading-none md:text-3xl">–</button>
               </div>
             </div>
