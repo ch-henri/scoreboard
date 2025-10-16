@@ -154,6 +154,8 @@ window.addEventListener('alpine:init', () => {
                     this.victory(color);
                 } else {
                     this.revertVictory(color);
+                    console.log(color);
+                    
                 }
                 // si 2 wazaari -> wazaari--
                 if (this.wazaari[color] == 2) this.wazaari[color]--;
@@ -185,7 +187,7 @@ window.addEventListener('alpine:init', () => {
                     this.victory(winnerColor);
                 }
                 elements.firstElementChild.textContent = counter;
-                this.revertVictory()
+                this.revertVictory();
             },
     
             victory(color) {
@@ -197,14 +199,17 @@ window.addEventListener('alpine:init', () => {
                 console.log(this.shidoCounter[color]);
             },
     
-            revertVictory() {
-                if (this.winner) {
+            revertVictory(color) {
+                this.gong.pause();
+                this.gong.currentTime = 0;                
+                if(color) { // if both ippon are 1.
+                    document.querySelector(`[data-ippon="${color}"]`).textContent = "0";
+                }
+                else if(this.winner) {
                     let ippon = document.querySelector(`[data-ippon="${this.winner}"]`);
                     ippon.textContent = "0";
-                }
-                this.winner = null;
-                this.gong.pause();
-                this.gong.currentTime = 0;
+                    this.winner = null;
+                } 
             },
     
             // ---------------------
